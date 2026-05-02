@@ -3,117 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitForge Pro - Master Edition</title>
+    <title>FitForge PRO | Canavar Sürümü</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --primary: #9d4edd; --secondary: #2ec4b6; --bg: #0f0f12; --card: #1c1c21; --text: #ffffff; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
-        .header { padding: 30px 20px; background: linear-gradient(135deg, #240046, #10002b); text-align: center; border-bottom: 2px solid var(--primary); }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .stat-card { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #333; }
-        .stat-card i { color: var(--secondary); font-size: 20px; margin-bottom: 8px; }
-        .xp-bar-container { margin: 20px; background: #333; height: 12px; border-radius: 10px; overflow: hidden; }
-        .xp-bar-fill { background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 35%; height: 100%; transition: 0.5s; }
-        .workout-section { padding: 0 20px; }
-        .input-group { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 20px; }
-        select, input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #25252b; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3); }
-        .log-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--secondary); }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #1c1c21; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+        :root { 
+            --primary: #9d4edd; /* Agresif Mor */
+            --secondary: #00ffcc; /* Neon Yeşil */
+            --bg: #09090b; 
+            --card: #18181b; 
+            --text: #ffffff; 
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg); color: var(--text); 
+            margin: 0; padding-bottom: 80px; user-select: none;
+        }
+
+        /* --- ÜST BİLGİ VE MOTİVASYON --- */
+        .header {
+            background: linear-gradient(180deg, #1a0033 0%, var(--bg) 100%);
+            padding: 20px; text-align: center; border-bottom: 2px solid var(--primary);
+        }
+        .daily-quote { font-style: italic; color: var(--secondary); font-size: 14px; margin-top: 10px; }
+        
+        /* --- SEVİYE VE XP SİSTEMİ --- */
+        .level-container { text-align: center; margin: 20px; padding: 20px; background: var(--card); border-radius: 15px; border: 1px solid #333; box-shadow: 0 0 20px rgba(157, 78, 221, 0.2); }
+        .rank-title { font-size: 24px; font-weight: bold; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; }
+        .xp-bar-bg { width: 100%; height: 20px; background: #222; border-radius: 10px; margin-top: 15px; overflow: hidden; position: relative; }
+        .xp-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 0%; transition: width 0.5s ease-out; box-shadow: 0 0 10px var(--secondary); }
+
+        /* --- KARTLAR VE İÇERİK --- */
+        .section-title { padding: 0 20px; color: #888; font-size: 14px; text-transform: uppercase; margin-top: 20px; }
+        .card { background: var(--card); margin: 10px 20px; padding: 20px; border-radius: 15px; border-left: 4px solid var(--secondary); display: flex; align-items: center; justify-content: space-between; }
+        .card-icon { font-size: 30px; color: var(--primary); margin-right: 15px; }
+        
+        /* --- ANTRENMAN MODÜLÜ --- */
+        .workout-box { background: var(--card); margin: 15px 20px; padding: 15px; border-radius: 15px; border: 1px solid #333; }
+        .exercise-anim { height: 120px; background: #222; border-radius: 10px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 12px; text-align: center; border: 1px dashed var(--primary); }
+        .exercise-title { font-size: 18px; font-weight: bold; color: var(--secondary); }
+        .exercise-sets { color: #aaa; font-size: 14px; margin-top: 5px; }
+        
+        button { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        button:active { background: var(--secondary); color: black; transform: scale(0.98); }
+
+        /* --- ALT MENÜ --- */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; z-index: 1000; }
+        .nav-item { color: #666; text-align: center; font-size: 20px; cursor: pointer; transition: 0.3s; width: 25%; }
+        .nav-item.active { color: var(--secondary); text-shadow: 0 0 10px var(--secondary); }
+        .nav-text { font-size: 10px; display: block; margin-top: 5px; }
+
+        /* SADECE AKTİF SAYFAYI GÖSTER */
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- SU TAKİBİ --- */
+        .water-btn { background: #0077b6; padding: 15px; display: inline-block; border-radius: 50%; width: 60px; height: 60px; text-align: center; line-height: 30px; font-size: 24px; box-shadow: 0 0 15px #0077b6; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1 style="margin:0; font-size: 24px;">FITFORGE <span style="color: var(--secondary);">PRO</span></h1>
-    <p style="font-size: 12px; opacity: 0.7;">Gelişimi Hisset, Sınırları Zorla</p>
+    <h1 style="margin: 0; font-size: 28px; letter-spacing: 3px;">FITFORGE <span style="color: var(--secondary);">PRO</span></h1>
+    <div class="daily-quote" id="dailyQuote">"Pes ettiğin an, başkalarının kazanmaya başladığı andır."</div>
 </div>
 
-<div class="xp-bar-container">
-    <div class="xp-bar-fill" id="xpBar"></div>
-</div>
-<p style="text-align:center; font-size: 12px; margin-top: -15px;">Seviye 1 - Yolun Başındasın</p>
-
-<div class="stats-grid">
-    <div class="stat-card">
-        <i class="fas fa-fire"></i>
-        <div id="kcal">0</div>
-        <div style="font-size: 10px; color: #aaa;">YAKILAN KCAL</div>
-    </div>
-    <div class="stat-card">
-        <i class="fas fa-dumbbell"></i>
-        <div id="totalReps">0</div>
-        <div style="font-size: 10px; color: #aaa;">TOPLAM TEKRAR</div>
-    </div>
-</div>
-
-<div class="workout-section">
-    <div class="input-group">
-        <label>Egzersiz Seç</label>
-        <select id="exType">
-            <option value="10">Şınav (Göğüs)</option>
-            <option value="8">Mekik (Karın)</option>
-            <option value="12">Squat (Bacak)</option>
-            <option value="15">Burpee (Tüm Vücut)</option>
-        </select>
-        <input type="number" id="exVal" placeholder="Kaç tekrar yaptın?">
-        <button onclick="addWorkout()">ANTRENMANI KAYDET</button>
+<div id="page-home" class="page active">
+    <div class="level-container">
+        <div id="rankIcon" style="font-size: 40px; margin-bottom: 10px;">🟢</div>
+        <div class="rank-title" id="rankTitle">Seviye 1 : HURDA</div>
+        <div style="font-size: 14px; color: #aaa; margin-top: 5px;">Seviye Atlamaya Kalan XP: <span id="xpNeeded">100</span></div>
+        <div class="xp-bar-bg"><div class="xp-bar-fill" id="xpBar"></div></div>
     </div>
 
-    <div id="logHistory">
+    <div class="section-title">Günün İstatistikleri</div>
+    <div class="card">
+        <div style="display: flex; align-items: center;">
+            <i class="fas fa-fire card-icon"></i>
+            <div>
+                <div style="font-size: 20px; font-weight: bold;">0 Kcal</div>
+                <div style="font-size: 12px; color: #888;">Yakılan Kalori</div>
+            </div>
         </div>
+    </div>
 </div>
 
-<div class="nav-bar">
-    <i class="fas fa-home" style="color: var(--primary);"></i>
-    <i class="fas fa-chart-line"></i>
-    <i class="fas fa-user"></i>
-    <i class="fas fa-cog"></i>
+<div id="page-program" class="page">
+    <div class="section-title">Tüm Vücut - Hipertrofi Odaklı (Seviye 1)</div>
+    
+    <div class="workout-box">
+        <div class="exercise-anim">
+            <i class="fas fa-play-circle" style="font-size: 30px; margin-right: 10px;"></i>
+            Buraya kırmızı yanan kas animasyonu videosu gelecek
+        </div>
+        <div class="exercise-title">1. Şınav (Göğüs/Arka Kol)</div>
+        <div class="exercise-sets">Hedef: 3 Set x 10-12 Tekrar</div>
+        <p style="font-size: 12px; color:#888;">Nefes alarak in, patlayıcı bir şekilde kalk. Dirsekleri dışa fazla açma.</p>
+        <button onclick="completeExercise(50)">GÖREVİ TAMAMLA (+50 XP)</button>
+    </div>
+
+    <div class="workout-box">
+        <div class="exercise-anim">
+            <i class="fas fa-play-circle" style="font-size: 30px; margin-right: 10px;"></i>
+            Buraya bacak kası animasyonu gelecek
+        </div>
+        <div class="exercise-title">2. Goblet Squat (Bacak/Kalça)</div>
+        <div class="exercise-sets">Hedef: 4 Set x 15 Tekrar</div>
+        <p style="font-size: 12px; color:#888;">Dizler ayak parmak ucunu geçmeyecek şekilde arkaya otur.</p>
+        <button onclick="completeExercise(70)">GÖREVİ TAMAMLA (+70 XP)</button>
+    </div>
+</div>
+
+<div id="page-health" class="page">
+    <div class="section-title">Günün Bilgi Kartı</div>
+    <div class="card" style="border-left-color: var(--primary);">
+        <i class="fas fa-brain card-icon"></i>
+        <div style="font-size: 13px;" id="dailyTip">Kaslar antrenmanda değil, uyurken dinlenirken büyür. En az 7-8 saat uyku şarttır.</div>
+    </div>
+
+    <div class="section-title">Su Hatırlatıcısı (Min: 1.5L)</div>
+    <div class="level-container">
+        <div style="font-size: 30px; color: #0077b6;"><span id="waterCount">0</span> / 1500 ml</div>
+        <div class="water-btn" onclick="addWater()"><i class="fas fa-tint"></i></div>
+        <p style="font-size: 12px; color: #888;">250ml (1 Bardak) Ekle</p>
+    </div>
+</div>
+
+<div class="bottom-nav">
+    <div class="nav-item active" onclick="switchTab('home', this)"><i class="fas fa-home"></i><span class="nav-text">Ana Ekran</span></div>
+    <div class="nav-item" onclick="switchTab('program', this)"><i class="fas fa-dumbbell"></i><span class="nav-text">Program</span></div>
+    <div class="nav-item" onclick="switchTab('health', this)"><i class="fas fa-heartbeat"></i><span class="nav-text">Su & Bilgi</span></div>
+    <div class="nav-item" onclick="alert('PRO Özel Eklenecek!')"><i class="fas fa-star"></i><span class="nav-text">Bölgesel (Pro)</span></div>
 </div>
 
 <script>
-    let totalKcal = 0;
-    let totalReps = 0;
-    let xp = 0;
+    // VERİTABANI: SÖZLER VE BİLGİLER
+    const quotes = [
+        "Aci geçicidir, zafer ise sonsuz.",
+        "Dün söylediğin 'yarın' geldi. Kalk ve başla!",
+        "Disiplin, ne istediğinle şu an ne istediğin arasında seçim yapmaktır.",
+        "Ter, yağların ağlamasıdır. Onları ağlat!",
+        "Zorluklar seni zayıflatmaz, seni çelikleştirir."
+    ];
+    
+    const tips = [
+        "Antrenmandan 30 dk önce içilen sade kahve performansını %15 artırır.",
+        "Karın kasları mutfakta yapılır. Şeker ve kötü yağları kesmeden baklava göremezsin.",
+        "Her set arası 60-90 saniye dinlenmek hipertrofi (kas büyümesi) için idealdir.",
+        "Ağrı hissetmen geliştiğin anlamına gelmez, hareket formuna odaklan.",
+        "Antrenmandan sonraki 2 saat içinde protein alımı kas onarımını hızlandırır."
+    ];
 
-    function addWorkout() {
-        const kcalPerRep = document.getElementById('exType').value;
-        const reps = document.getElementById('exVal').value;
-        const exName = document.getElementById('exType').options[document.getElementById('exType').selectedIndex].text;
+    // GÜNLÜK DEĞİŞKENLERİ AYARLA
+    let today = new Date().getDay();
+    document.getElementById('dailyQuote').innerText = `"${quotes[today % quotes.length]}"`;
+    document.getElementById('dailyTip').innerText = tips[today % tips.length];
 
-        if(!reps || reps <= 0) {
-            alert("Lütfen geçerli bir sayı gir!");
-            return;
-        }
+    // OYUNCU SİSTEMİ (Gamification)
+    let userXP = 0;
+    let userLevel = 1;
+    let waterMl = 0;
 
-        // Hesaplamalar
-        const earnedKcal = kcalPerRep * reps;
-        totalKcal += earnedKcal;
-        totalReps += parseInt(reps);
-        xp += (reps * 2);
-        if(xp > 100) xp = 100; // Örnek bar sınırlaması
+    const ranks = [
+        { level: 1, name: "HURDA", icon: "🟢", req: 100 },
+        { level: 10, name: "DEMİR", icon: "⚙️", req: 300 },
+        { level: 20, name: "ÇELİK", icon: "🛡️", req: 800 },
+        { level: 30, name: "TİTAN", icon: "⚔️", req: 2000 },
+        { level: 40, name: "PRO", icon: "🔥", req: 5000 },
+        { level: 50, name: "KOMANDO", icon: "👑", req: 10000 }
+    ];
 
-        // Arayüzü Güncelle
-        document.getElementById('kcal').innerText = totalKcal;
-        document.getElementById('totalReps').innerText = totalReps;
-        document.getElementById('xpBar').style.width = xp + "%";
-
-        // Geçmişe Ekle
-        const history = document.getElementById('logHistory');
-        const item = document.createElement('div');
-        item.className = 'log-item';
-        item.innerHTML = `
-            <div>
-                <div style="font-weight:bold">${exName.split('(')[0]}</div>
-                <div style="font-size:11px; color:#aaa">${reps} Tekrar</div>
-            </div>
-            <div style="color:var(--secondary); font-weight:bold">+${earnedKcal} kcal</div>
-        `;
-        history.prepend(item);
-
-        // Temizle
-        document.getElementById('exVal').value = "";
+    function completeExercise(xpEarned) {
+        userXP += xpEarned;
+        checkLevelUp();
+        alert(`Tebrikler! ${xpEarned} XP kazandın. Hedefe bir adım daha yaklaştın!`);
+        updateUI();
     }
+
+    function checkLevelUp() {
+        // Seviye zorlaşma matematiği
+        let requiredXp = userLevel * 100 * (userLevel * 0.5); 
+        if (userXP >= requiredXp) {
+            userLevel++;
+            userXP = 0; // Seviye atlayınca bara sıfırdan başla
+            alert(`🔥 SEVİYE ATLADIN! Artık Seviye ${userLevel} oldun! 🔥`);
+        }
+    }
+
+    function updateUI() {
+        let currentRank = ranks[0];
+        for(let r of ranks) { if(userLevel >= r.level) currentRank = r; }
+
+        document.getElementById('rankTitle').innerText = `Seviye ${userLevel} : ${currentRank.name}`;
+        document.getElementById('rankIcon').innerText = currentRank.icon;
+        
+        let requiredXp = userLevel * 100 * (userLevel * 0.5);
+        document.getElementById('xpNeeded').innerText = requiredXp - userXP;
+        
+        let percent = (userXP / requiredXp) * 100;
+        document.getElementById('xpBar').style.width = percent + "%";
+    }
+
+    function addWater() {
+        waterMl += 250;
+        document.getElementById('waterCount').innerText = waterMl;
+        if(waterMl === 1500) alert("Harika! Günlük minimum su hedefine ulaştın!");
+    }
+
+    // SAYFA DEĞİŞTİRME MANTIĞI
+    function switchTab(pageId, element) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page-' + pageId).classList.add('active');
+        
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        element.classList.add('active');
+    }
+
+    // Bildirim İzni İsteme (Spor Hatırlatıcısı İçin İlk Adım)
+    if ("Notification" in window) {
+        Notification.requestPermission();
+    }
+
+    updateUI(); // Sayfa açılınca UI'ı güncelle
 </script>
 
 </body>
