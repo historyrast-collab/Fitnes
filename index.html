@@ -3,315 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FITFORGE SUPREME | Pro Home Workout</title>
+    <title>FITFORGE | ELITE PRESTIGE</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Syncopate:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Orbitron:wght@500;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #ff4757; --secondary: #2ed573; --dark: #000000; --card: #121212;
-            --accent: #5352ed; --text: #ffffff; --muted: #a4b0be; --grad: linear-gradient(135deg, #ff4757, #ff6b81);
+            --neon: #00ff88; --royal: #8a2be2; --bg: #080808; --card: #141414;
+            --text: #ffffff; --sub: #666666; --danger: #ff3e3e;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
         body {
-            font-family: 'Poppins', sans-serif; background: var(--dark); color: var(--text);
-            margin: 0; padding-bottom: 100px; overflow-x: hidden;
+            font-family: 'Montserrat', sans-serif; background: var(--bg); color: var(--text);
+            margin: 0; padding: 0; overflow-x: hidden;
         }
 
-        /* --- DASHBOARD UI --- */
-        .glass { background: var(--card); border: 1px solid rgba(255,255,255,0.05); border-radius: 32px; }
-        .header { padding: 60px 25px 30px; background: linear-gradient(180deg, #1e1e1e 0%, var(--dark) 100%); }
-        .header h1 { font-family: 'Syncopate', sans-serif; font-size: 24px; letter-spacing: 3px; margin: 0; color: var(--primary); }
-
-        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 0 20px; margin-top: -30px; }
-        .stat-item { padding: 20px 10px; text-align: center; }
-        .stat-item b { display: block; font-size: 20px; font-weight: 800; color: #fff; }
-        .stat-item span { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-
-        /* --- HEATMAP --- */
-        .map-box { margin: 25px 20px; padding: 25px; text-align: center; position: relative; }
-        .human-svg { width: 130px; fill: #222; transition: 0.8s; }
-        .active-part { fill: var(--secondary) !important; filter: drop-shadow(0 0 10px var(--secondary)); }
-
-        /* --- WORKOUT LIST --- */
-        .list-container { padding: 0 20px; margin-bottom: 30px; }
-        .card-pro { 
-            display: flex; align-items: center; gap: 20px; padding: 20px; margin-bottom: 15px; 
-            cursor: pointer; transition: 0.3s; position: relative; overflow: hidden;
-        }
-        .card-pro:active { transform: scale(0.96); }
-        .icon-box { width: 60px; height: 60px; border-radius: 18px; background: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--primary); }
-        .info-box h3 { margin: 0; font-size: 16px; font-weight: 700; }
-        .info-box p { margin: 5px 0 0; font-size: 12px; color: var(--muted); }
-
-        /* --- SUPREME ENGINE (MODAL) --- */
-        #supreme-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark);
-            z-index: 10000; display: none; flex-direction: column;
-        }
-        .progress-top { height: 6px; background: #111; width: 100%; }
-        .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 0.5s; }
+        /* --- PRESTIGE UI ELEMENTS --- */
+        .glass-panel { background: rgba(20, 20, 20, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); border-radius: 25px; }
+        .neon-shadow { box-shadow: 0 0 20px rgba(0, 255, 136, 0.15); }
         
-        .engine-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
-        .visual-container { width: 100%; height: 260px; border-radius: 40px; background: #0a0a0a; margin-bottom: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #111; }
-        .ex-name { font-size: 32px; font-weight: 800; margin-bottom: 10px; }
-        .ex-val { font-size: 64px; font-weight: 900; color: var(--primary); font-family: 'Syncopate'; }
+        /* --- HEADER & DASHBOARD --- */
+        .app-header { padding: 50px 25px 20px; display: flex; justify-content: space-between; align-items: center; }
+        .app-header h1 { font-family: 'Orbitron', sans-serif; font-size: 20px; letter-spacing: 2px; margin: 0; background: linear-gradient(to right, #00ff88, #8a2be2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* --- REST OVERLAY --- */
-        #rest-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--secondary);
-            z-index: 11000; display: none; flex-direction: column; align-items: center; justify-content: center; color: #000;
-        }
-        .rest-clock { font-size: 120px; font-weight: 900; margin: 20px 0; font-family: 'Syncopate'; }
+        .top-summary { margin: 15px 20px; padding: 30px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; text-align: center; }
+        .top-summary b { display: block; font-size: 20px; font-weight: 900; }
+        .top-summary span { font-size: 9px; color: var(--sub); text-transform: uppercase; letter-spacing: 1px; }
 
-        /* --- NAVIGATION --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: rgba(0,0,0,0.9); backdrop-filter: blur(20px);
-            display: flex; justify-content: space-around; padding: 30px 0; border-top: 1px solid #111;
+        /* --- MODERN CARDS --- */
+        .workout-grid { padding: 0 20px 120px; }
+        .card-elite { 
+            position: relative; height: 160px; border-radius: 30px; margin-bottom: 20px; overflow: hidden;
+            background: linear-gradient(45deg, #111, #1a1a1a); display: flex; flex-direction: column; justify-content: flex-end; padding: 25px;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;
         }
-        .nav-link { color: #444; font-size: 22px; transition: 0.3s; }
-        .nav-link.active { color: var(--primary); }
+        .card-elite:active { transform: scale(0.95); }
+        .card-elite::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, rgba(0,0,0,0.9) 0%, transparent 60%); }
+        .card-content { position: relative; z-index: 2; }
+        .card-content h3 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+        .card-content p { margin: 5px 0 0; font-size: 11px; color: var(--neon); font-weight: 700; text-transform: uppercase; }
 
-        .btn-main {
-            background: var(--grad); color: #fff; border: none; padding: 22px; border-radius: 25px;
-            width: 85%; font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;
-            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.3);
+        /* --- ENGINE MODAL (APP STYLE) --- */
+        #engine {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg);
+            z-index: 9999; display: none; flex-direction: column; animation: slideUp 0.5s ease;
         }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .engine-top { padding: 25px; display: flex; align-items: center; justify-content: space-between; }
+        .progress-container { flex: 1; height: 6px; background: #1a1a1a; margin: 0 20px; border-radius: 10px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--neon); width: 0%; transition: 0.6s; }
+
+        .visual-frame { width: 85%; height: 280px; margin: 20px auto; border-radius: 40px; background: #111; position: relative; overflow: hidden; border: 1px solid #222; }
+        .anim-placeholder { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #1a1a1a, #000); }
+        .anim-placeholder i { font-size: 80px; color: var(--neon); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.5; } }
+
+        .ex-title { font-size: 32px; font-weight: 900; margin: 10px 0; font-family: 'Orbitron', sans-serif; }
+        .ex-reps { font-size: 50px; font-weight: 900; color: var(--neon); margin-bottom: 30px; }
+
+        /* --- ACTION BUTTONS --- */
+        .btn-action {
+            background: var(--neon); color: #000; border: none; padding: 22px; border-radius: 25px;
+            width: 85%; font-weight: 900; font-size: 16px; text-transform: uppercase; letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3); transition: 0.3s;
+        }
+        .btn-action:active { transform: scale(0.9); }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-bar {
+            position: fixed; bottom: 30px; left: 10%; width: 80%; height: 75px; 
+            background: rgba(20,20,20,0.9); backdrop-filter: blur(20px); border-radius: 40px;
+            display: flex; justify-content: space-around; align-items: center; border: 1px solid rgba(255,255,255,0.05); z-index: 9000;
+        }
+        .nav-btn { font-size: 22px; color: #444; transition: 0.3s; }
+        .nav-btn.active { color: var(--neon); }
 
         .hidden { display: none; }
-        .fade-in { animation: fadeIn 0.4s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div id="p-home" class="page fade-in">
-    <div class="header">
-        <h1>FITFORGE <span style="color:#fff">SUPREME</span></h1>
-        <p style="font-size: 10px; color: var(--muted); margin-top: 5px; font-weight: 700; letter-spacing: 2px;">V1.0 PRO EDITION</p>
+<div id="view-home">
+    <div class="app-header">
+        <h1>FITFORGE ELITE</h1>
+        <i class="fas fa-user-circle" style="font-size: 28px; color: #222;"></i>
     </div>
 
-    <div class="stat-grid">
-        <div class="stat-item glass">
-            <b id="user-count">0</b>
-            <span>Egzersiz</span>
-        </div>
-        <div class="stat-item glass">
-            <b id="user-kcal">0</b>
-            <span>Kcal</span>
-        </div>
-        <div class="stat-item glass">
-            <b id="user-min">0</b>
-            <span>Dakika</span>
-        </div>
+    <div class="top-summary glass-panel neon-shadow">
+        <div><b id="s-ex">0</b><span>BAŞARI</span></div>
+        <div><b id="s-kcal">0</b><span>KCAL</span></div>
+        <div><b id="s-min">0</b><span>DAKİKA</span></div>
     </div>
 
-    <div class="map-box glass">
-        <span style="font-size: 10px; font-weight: 800; color: var(--secondary); letter-spacing: 2px;">AKTİF KAS GRUPLARI</span>
-        <div style="margin-top: 20px;">
-            <svg class="human-svg" viewBox="0 0 100 200">
-                <circle cx="50" cy="20" r="15" />
-                <rect id="mus-chest" x="35" y="40" width="30" height="30" rx="5" />
-                <rect id="mus-arm-l" x="15" y="40" width="15" height="60" rx="5" />
-                <rect id="mus-arm-r" x="70" y="40" width="15" height="60" rx="5" />
-                <rect id="mus-abs" x="40" y="75" width="20" height="30" rx="2" />
-                <rect id="mus-leg-l" x="35" y="110" width="12" height="70" rx="5" />
-                <rect id="mus-leg-r" x="53" y="110" width="12" height="70" rx="5" />
-            </svg>
-        </div>
+    <div style="padding: 20px 25px;">
+        <h2 style="font-size: 14px; color: var(--sub); letter-spacing: 2px;">GÜNLÜK MÜFREDAT</h2>
     </div>
 
-    <div class="list-container">
-        <h2 style="font-size: 18px; margin-bottom: 20px;">Antrenman Seç</h2>
-        <div id="workout-render"></div>
+    <div class="workout-grid" id="list-render"></div>
+</div>
+
+<div id="engine">
+    <div class="engine-top">
+        <i class="fas fa-chevron-left" onclick="stopWorkout()" style="font-size: 24px;"></i>
+        <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
+        <div style="font-weight: 900; color: var(--neon);" id="step-txt">1/8</div>
+    </div>
+
+    <div class="visual-frame neon-shadow">
+        <div class="anim-placeholder"><i id="ex-icon" class="fas fa-person-running"></i></div>
+    </div>
+
+    <div style="text-align: center; padding: 20px;">
+        <div class="ex-title" id="ex-name">HAZIRLAN</div>
+        <div class="ex-reps" id="ex-val">X 15</div>
+        <button class="btn-action" onclick="nextStep()">SIRADAKİ HAREKET</button>
     </div>
 </div>
 
-<div id="p-tools" class="page hidden fade-in">
-    <div style="padding: 80px 25px;">
-        <h2 style="font-family:'Syncopate'; color:var(--primary)">ANALİZ MERKEZİ</h2>
-        <div class="glass" style="padding:30px; margin-top:20px;">
-            <h3 style="margin:0 0 20px 0;">VKE Hesapla</h3>
-            <input type="number" id="h" placeholder="Boy (cm)" style="width:100%; padding:20px; background:#000; border:1px solid #222; color:#fff; border-radius:15px; margin-bottom:15px;">
-            <input type="number" id="w" placeholder="Kilo (kg)" style="width:100%; padding:20px; background:#000; border:1px solid #222; color:#fff; border-radius:15px; margin-bottom:20px;">
-            <button class="btn-main" onclick="calcBMI()" style="width:100%; margin:0;">HESAPLA</button>
-            <p id="bmi-res" style="margin-top:20px; font-weight:800; font-size:18px;"></p>
-        </div>
-    </div>
-</div>
-
-<div id="supreme-modal">
-    <div class="progress-top"><div class="progress-bar" id="p-bar"></div></div>
-    <div style="padding: 20px; display:flex; justify-content:space-between; align-items:center;">
-        <i class="fas fa-times" onclick="closeEngine()" style="font-size:24px;"></i>
-        <div style="font-weight:800; color:var(--muted)" id="step-info">1 / 10</div>
-    </div>
-    <div class="engine-body">
-        <div class="visual-container">
-            <i id="ex-icon" class="fas fa-running" style="font-size:100px; color:#1a1a1a;"></i>
-        </div>
-        <div class="ex-name" id="ex-name">HAZIRLAN</div>
-        <div class="ex-val" id="ex-val">00</div>
-        <div style="width:100%; margin-top:40px;">
-            <button class="btn-main" onclick="nextStep()">BİTTİ</button>
-        </div>
-    </div>
-</div>
-
-<div id="rest-overlay">
-    <h2 style="font-family:'Syncopate'; letter-spacing:5px;">DİNLEN</h2>
-    <div class="rest-clock" id="rest-clock">20</div>
-    <p id="next-label" style="font-weight:700; font-size:18px;">Sıradaki: Şınav</p>
-    <button onclick="skipRest()" style="margin-top:30px; background:none; border:2px solid #000; padding:12px 40px; border-radius:30px; font-weight:900;">ATLA</button>
-</div>
-
-<div class="bottom-nav">
-    <div class="nav-link active" onclick="nav('home', this)"><i class="fas fa-grip-vertical"></i></div>
-    <div class="nav-link" onclick="nav('tools', this)"><i class="fas fa-chart-bar"></i></div>
-    <div class="nav-link" onclick="reset()"><i class="fas fa-sync"></i></div>
+<div class="bottom-bar">
+    <div class="nav-btn active"><i class="fas fa-bolt"></i></div>
+    <div class="nav-btn"><i class="fas fa-chart-simple"></i></div>
+    <div class="nav-btn"><i class="fas fa-shield-halved"></i></div>
+    <div class="nav-btn" onclick="resetAll()"><i class="fas fa-power-off"></i></div>
 </div>
 
 <script>
-    // --- DATABASE ---
+    // --- PROFESSIONAL DATA SET ---
     const workouts = [
-        { id: 1, name: "Tüm Vücut Yıkımı", kcal: 250, min: 15, m: "abs",
-          steps: [
-              {n: "Jumping Jacks", v: "X 30", icon: "fa-person-walking-arrow-right"},
-              {n: "Klasik Şınav", v: "X 15", icon: "fa-hand-fist"},
-              {n: "Squat", v: "X 20", icon: "fa-child-reaching"},
-              {n: "Plank", v: "45 SN", icon: "fa-clock"}
+        { id: 1, name: "TÜM VÜCUT PARÇALAMA", kcal: 320, time: 12, 
+          exercises: [
+              {n: "Jumping Jacks", v: "X 30", i: "fa-person-running"},
+              {n: "Geniş Şınav", v: "X 15", i: "fa-hand-fist"},
+              {n: "Karın Mekik", v: "X 20", i: "fa-user-ninja"},
+              {n: "Dağ Tırmanışı", v: "45 SN", i: "fa-mountain"},
+              {n: "Squat", v: "X 25", i: "fa-person-walking-arrow-loop-left"}
           ]
         },
-        { id: 2, name: "Çelik Göğüs & Kol", kcal: 320, min: 20, m: "chest",
-          steps: [
-              {n: "Geniş Şınav", v: "X 20", icon: "fa-arrows-left-right"},
-              {n: "Elmas Şınav", v: "X 12", icon: "fa-gem"},
-              {n: "Dips", v: "X 15", icon: "fa-chair"},
-              {n: "Yumruk Şınavı", v: "X 10", icon: "fa-hand-fist"}
+        { id: 2, name: "GÖĞÜS & TRICEPS", kcal: 450, time: 20,
+          exercises: [
+              {n: "Elmas Şınav", v: "X 12", i: "fa-gem"},
+              {n: "Dips", v: "X 15", i: "fa-chair"},
+              {n: "Diz Üstü Şınav", v: "X 20", i: "fa-person-praying"}
           ]
         },
-        { id: 3, name: "Karın Kasları (ABS)", kcal: 180, min: 12, m: "abs",
-          steps: [
-              {n: "Mekik", v: "X 25", icon: "fa-user-ninja"},
-              {n: "Dağ Tırmanışı", v: "40 SN", icon: "fa-mountain"},
-              {n: "Bacak Kaldırma", v: "X 15", icon: "fa-up-long"}
+        { id: 3, name: "KARIN KASLARI (6-PACK)", kcal: 280, time: 10,
+          exercises: [
+              {n: "Leg Raises", v: "X 15", i: "fa-up-long"},
+              {n: "Russian Twist", v: "X 30", i: "fa-rotate"},
+              {n: "Plank", v: "60 SN", i: "fa-clock"}
           ]
         }
     ];
 
-    let state = JSON.parse(localStorage.getItem('ff_supreme')) || { 
-        count: 0, kcal: 0, min: 0, lastMus: '', doneIds: [] 
-    };
+    let user = JSON.parse(localStorage.getItem('elite_v1')) || { count: 0, kcal: 0, min: 0 };
+    let currentW = null;
+    let currentIdx = 0;
 
-    function tts(t) {
-        const s = new SpeechSynthesisUtterance(t);
-        s.lang = 'tr-TR'; s.rate = 0.9;
-        window.speechSynthesis.speak(s);
+    function tts(txt) {
+        const msg = new SpeechSynthesisUtterance(txt);
+        msg.lang = 'tr-TR'; msg.rate = 1;
+        window.speechSynthesis.speak(msg);
     }
 
     function init() {
-        const list = document.getElementById('workout-render');
+        const list = document.getElementById('list-render');
         list.innerHTML = "";
         workouts.forEach(w => {
             list.innerHTML += `
-                <div class="card-pro glass" onclick="start(${w.id})">
-                    <div class="icon-box"><i class="fas fa-bolt"></i></div>
-                    <div class="info-box">
+                <div class="card-elite glass-panel" onclick="startWorkout(${w.id})">
+                    <div class="card-content">
                         <h3>${w.name}</h3>
-                        <p>${w.kcal} KCAL • ${w.min} DAKİKA</p>
+                        <p>${w.kcal} KCAL • ${w.time} DAKİKA</p>
                     </div>
                 </div>`;
         });
-        document.getElementById('user-count').innerText = state.count;
-        document.getElementById('user-kcal').innerText = state.kcal;
-        document.getElementById('user-min').innerText = state.min;
-
-        // Map
-        document.querySelectorAll('rect, circle').forEach(el => el.classList.remove('active-part'));
-        if(state.lastMus) {
-            if(state.lastMus === 'arm') { document.getElementById('mus-arm-l').classList.add('active-part'); document.getElementById('mus-arm-r').classList.add('active-part'); }
-            else { document.getElementById('mus-'+state.lastMus).classList.add('active-part'); }
-        }
+        document.getElementById('s-ex').innerText = user.count;
+        document.getElementById('s-kcal').innerText = user.kcal;
+        document.getElementById('s-min').innerText = user.min;
     }
 
-    let activeW = null;
-    let stepIdx = 0;
-    let restTimer;
-
-    function start(id) {
-        activeW = workouts.find(x => x.id === id);
-        stepIdx = 0;
-        document.getElementById('supreme-modal').style.display = 'flex';
-        updateStep();
-        tts(activeW.name + " başlıyor. Bol şans.");
+    function startWorkout(id) {
+        currentW = workouts.find(w => w.id === id);
+        currentIdx = 0;
+        document.getElementById('engine').style.display = 'flex';
+        updateUI();
+        tts(currentW.name + " antrenmanı başlıyor. İlk hareket " + currentW.exercises[0].n);
     }
 
-    function updateStep() {
-        const s = activeW.steps[stepIdx];
-        document.getElementById('ex-name').innerText = s.n;
-        document.getElementById('ex-val').innerText = s.v;
-        document.getElementById('ex-icon').className = "fas " + s.icon;
-        document.getElementById('step-info').innerText = `${stepIdx + 1} / ${activeW.steps.length}`;
-        document.getElementById('p-bar').style.width = ((stepIdx) / activeW.steps.length) * 100 + "%";
+    function updateUI() {
+        const ex = currentW.exercises[currentIdx];
+        document.getElementById('ex-name').innerText = ex.n;
+        document.getElementById('ex-val').innerText = ex.v;
+        document.getElementById('ex-icon').className = "fas " + ex.i;
+        document.getElementById('step-txt').innerText = `${currentIdx + 1} / ${currentW.exercises.length}`;
+        document.getElementById('p-bar').style.width = ((currentIdx + 1) / currentW.exercises.length) * 100 + "%";
     }
 
     function nextStep() {
-        stepIdx++;
-        if(stepIdx < activeW.steps.length) {
-            openRest();
+        currentIdx++;
+        if(currentIdx < currentW.exercises.length) {
+            updateUI();
+            tts("Sıradaki hareket " + currentW.exercises[currentIdx].n);
         } else {
             finish();
         }
     }
 
-    function openRest() {
-        document.getElementById('rest-overlay').style.display = 'flex';
-        document.getElementById('next-label').innerText = "Sıradaki: " + activeW.steps[stepIdx].n;
-        let c = 20;
-        document.getElementById('rest-clock').innerText = c;
-        tts("Dinlenme vakti.");
-
-        restTimer = setInterval(() => {
-            c--;
-            document.getElementById('rest-clock').innerText = c;
-            if(c <= 0) skipRest();
-        }, 1000);
-    }
-
-    function skipRest() {
-        clearInterval(restTimer);
-        document.getElementById('rest-overlay').style.display = 'none';
-        updateStep();
-    }
-
     function finish() {
-        state.count++;
-        state.kcal += activeW.kcal;
-        state.min += activeW.min;
-        state.lastMus = activeW.m;
-        save();
-        closeEngine();
-        tts("Harika iş çıkardın! Antrenman bitti.");
-        alert("TEBRİKLER! ANTRENMAN TAMAMLANDI.");
+        user.count++;
+        user.kcal += currentW.kcal;
+        user.min += currentW.time;
+        localStorage.setItem('elite_v1', JSON.stringify(user));
+        document.getElementById('engine').style.display = 'none';
+        init();
+        tts("Tebrikler şampiyon! Bir antrenmanı daha başarıyla tamamladın.");
+        alert("EFSANESİN! ANTRENMAN BİTTİ.");
     }
 
-    function calcBMI() {
-        const height = document.getElementById('h').value / 100;
-        const weight = document.getElementById('w').value;
-        const bmi = (weight / (height * height)).toFixed(1);
-        document.getElementById('bmi-res').innerText = "VKE: " + bmi;
-    }
-
-    function nav(p, el) {
-        document.querySelectorAll('.page').forEach(x => x.classList.add('hidden'));
-        document.getElementById('p-'+p).classList.remove('hidden');
-        document.querySelectorAll('.nav-link').forEach(x => x.classList.remove('active'));
-        el.classList.add('active');
-    }
-
-    function closeEngine() { document.getElementById('supreme-modal').style.display = 'none'; clearInterval(restTimer); }
-    function save() { localStorage.setItem('ff_supreme', JSON.stringify(state)); init(); }
-    function reset() { if(confirm("Sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
+    function stopWorkout() { if(confirm("Çıkmak istiyor musun?")) document.getElementById('engine').style.display = 'none'; }
+    function resetAll() { if(confirm("Tüm veriler sıfırlansın mı?")) { localStorage.clear(); location.reload(); } }
 
     init();
 </script>
