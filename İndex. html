@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitForge Pro - Master Edition</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #9d4edd; --secondary: #2ec4b6; --bg: #0f0f12; --card: #1c1c21; --text: #ffffff; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding-bottom: 80px; }
+        .header { padding: 30px 20px; background: linear-gradient(135deg, #240046, #10002b); text-align: center; border-bottom: 2px solid var(--primary); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .stat-card { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #333; }
+        .stat-card i { color: var(--secondary); font-size: 20px; margin-bottom: 8px; }
+        .xp-bar-container { margin: 20px; background: #333; height: 12px; border-radius: 10px; overflow: hidden; }
+        .xp-bar-fill { background: linear-gradient(90deg, var(--primary), var(--secondary)); width: 35%; height: 100%; transition: 0.5s; }
+        .workout-section { padding: 0 20px; }
+        .input-group { background: var(--card); padding: 20px; border-radius: 20px; margin-bottom: 20px; }
+        select, input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid #444; background: #25252b; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(157, 78, 221, 0.3); }
+        .log-item { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--secondary); }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #1c1c21; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #333; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 style="margin:0; font-size: 24px;">FITFORGE <span style="color: var(--secondary);">PRO</span></h1>
+    <p style="font-size: 12px; opacity: 0.7;">Gelişimi Hisset, Sınırları Zorla</p>
+</div>
+
+<div class="xp-bar-container">
+    <div class="xp-bar-fill" id="xpBar"></div>
+</div>
+<p style="text-align:center; font-size: 12px; margin-top: -15px;">Seviye 1 - Yolun Başındasın</p>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <i class="fas fa-fire"></i>
+        <div id="kcal">0</div>
+        <div style="font-size: 10px; color: #aaa;">YAKILAN KCAL</div>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-dumbbell"></i>
+        <div id="totalReps">0</div>
+        <div style="font-size: 10px; color: #aaa;">TOPLAM TEKRAR</div>
+    </div>
+</div>
+
+<div class="workout-section">
+    <div class="input-group">
+        <label>Egzersiz Seç</label>
+        <select id="exType">
+            <option value="10">Şınav (Göğüs)</option>
+            <option value="8">Mekik (Karın)</option>
+            <option value="12">Squat (Bacak)</option>
+            <option value="15">Burpee (Tüm Vücut)</option>
+        </select>
+        <input type="number" id="exVal" placeholder="Kaç tekrar yaptın?">
+        <button onclick="addWorkout()">ANTRENMANI KAYDET</button>
+    </div>
+
+    <div id="logHistory">
+        </div>
+</div>
+
+<div class="nav-bar">
+    <i class="fas fa-home" style="color: var(--primary);"></i>
+    <i class="fas fa-chart-line"></i>
+    <i class="fas fa-user"></i>
+    <i class="fas fa-cog"></i>
+</div>
+
+<script>
+    let totalKcal = 0;
+    let totalReps = 0;
+    let xp = 0;
+
+    function addWorkout() {
+        const kcalPerRep = document.getElementById('exType').value;
+        const reps = document.getElementById('exVal').value;
+        const exName = document.getElementById('exType').options[document.getElementById('exType').selectedIndex].text;
+
+        if(!reps || reps <= 0) {
+            alert("Lütfen geçerli bir sayı gir!");
+            return;
+        }
+
+        // Hesaplamalar
+        const earnedKcal = kcalPerRep * reps;
+        totalKcal += earnedKcal;
+        totalReps += parseInt(reps);
+        xp += (reps * 2);
+        if(xp > 100) xp = 100; // Örnek bar sınırlaması
+
+        // Arayüzü Güncelle
+        document.getElementById('kcal').innerText = totalKcal;
+        document.getElementById('totalReps').innerText = totalReps;
+        document.getElementById('xpBar').style.width = xp + "%";
+
+        // Geçmişe Ekle
+        const history = document.getElementById('logHistory');
+        const item = document.createElement('div');
+        item.className = 'log-item';
+        item.innerHTML = `
+            <div>
+                <div style="font-weight:bold">${exName.split('(')[0]}</div>
+                <div style="font-size:11px; color:#aaa">${reps} Tekrar</div>
+            </div>
+            <div style="color:var(--secondary); font-weight:bold">+${earnedKcal} kcal</div>
+        `;
+        history.prepend(item);
+
+        // Temizle
+        document.getElementById('exVal').value = "";
+    }
+</script>
+
+</body>
+</html>
