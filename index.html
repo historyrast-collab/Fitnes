@@ -3,1162 +3,753 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitForge | Aggressive Evolution</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;500;900&display=swap" rel="stylesheet">
+    <title>FITFORGE MASTER EDITION | NEURAL INTERFACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
+        /* --- BÖLÜM 1: SİBERNETİK TASARIM DİLİ (CSS) --- */
         :root {
-            --neon-purple: #6200EE;
             --neon-green: #39FF14;
-            --dark-bg: #0a0a0a;
-            --card-bg: #1a1a1a;
-            --text-color: #ffffff;
+            --neon-purple: #BC13FE;
+            --neon-blue: #00D2FF;
+            --titan-gold: #FFD700;
+            --danger-red: #FF3131;
+            --deep-black: #050505;
+            --surface-dark: #0F0F0F;
+            --steel-gray: #888888;
+            --glass-bg: rgba(15, 15, 15, 0.8);
+            --border-glow: 0 0 10px rgba(57, 255, 20, 0.2);
+            --shadow-heavy: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-color);
-            font-family: 'Roboto', sans-serif;
+            background-color: var(--deep-black);
+            color: #FFFFFF;
+            font-family: 'Inter', sans-serif;
             margin: 0;
+            padding: 0;
             overflow-x: hidden;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 1) 0%, rgba(5, 5, 5, 1) 100%),
+                url("https://www.transparenttextures.com/patterns/carbon-fibre.png");
         }
 
-        /* Üst Bar: Motivasyon ve Bilgi */
-        .top-info-bar {
-            background: linear-gradient(90deg, var(--neon-purple), #2b0066);
-            padding: 15px;
-            text-align: center;
-            border-bottom: 2px solid var(--neon-green);
+        /* --- KAYDIRMA ÇUBUĞU (SCROLLBAR) --- */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--deep-black); }
+        ::-webkit-scrollbar-thumb { 
+            background: linear-gradient(var(--neon-green), var(--neon-purple)); 
+            border-radius: 10px; 
         }
 
-        #daily-quote {
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            color: var(--neon-green);
-            text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        /* Level Haritası */
-        .level-container {
-            padding: 20px;
-            background: var(--card-bg);
-            margin: 10px;
-            border-radius: 10px;
-            border-left: 5px solid var(--neon-purple);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .level-rank {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            color: var(--neon-green);
-        }
-
-        .rank-icon {
-            font-size: 3rem;
-            filter: drop-shadow(0 0 5px var(--neon-green));
-        }
-
-        /* Antrenman ve Animasyon Alanı */
-        .workout-display {
-            background: #000;
-            height: 300px;
-            margin: 10px;
-            border: 1px solid #333;
+        /* --- ANA EKRAN (HUD) --- */
+        #viewport {
+            width: 100%;
+            height: 40vh;
             position: relative;
+            background: #000;
+            overflow: hidden;
+            border-bottom: 2px solid #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
+            box-shadow: var(--shadow-heavy);
         }
 
-        /* Kas Yanma Efekti (Placeholder) */
-        .muscle-overlay {
+        #fitnessCanvas {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 0 15px rgba(57, 255, 20, 0.4));
+        }
+
+        .hud-overlay {
             position: absolute;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, rgba(255,0,0,0.8) 0%, rgba(255,0,0,0) 70%);
-            border-radius: 50%;
-            animation: pulse 1s infinite;
-            display: none;
+            top: 20px;
+            left: 20px;
+            pointer-events: none;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            50% { transform: scale(1.5); opacity: 0.4; }
-            100% { transform: scale(1); opacity: 0.8; }
-        }
-
-        /* Su Takibi */
-        .water-tracker {
-            background: var(--card-bg);
-            margin: 10px;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .btn-action {
-            background: transparent;
-            border: 2px solid var(--neon-green);
-            color: var(--neon-green);
-            padding: 10px 20px;
+        .hud-title {
             font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            margin: 0;
+            letter-spacing: 3px;
+        }
+
+        /* --- KART SİSTEMİ (WIDGETS) --- */
+        .container {
+            max-width: 600px;
+            margin: -40px auto 100px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .widget {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-heavy);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-green);
+            box-shadow: var(--border-glow);
+        }
+
+        .widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+            animation: scanline 4s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* --- TİPOGRAFİ VE ETİKETLER --- */
+        h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            margin-top: 0;
+        }
+
+        .label {
+            font-size: 0.7rem;
+            color: var(--steel-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* --- BUTONLAR (INTERACTIVE) --- */
+        .btn {
+            background: none;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 12px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            border-radius: 4px;
             cursor: pointer;
             transition: 0.3s;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-action:hover {
+        .btn:hover {
             background: var(--neon-green);
             color: #000;
+            box-shadow: 0 0 20px var(--neon-green);
         }
 
-        .status-card {
-            background: #222;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            border-top: 2px solid var(--neon-purple);
+        .btn-purple { border-color: var(--neon-purple); color: var(--neon-purple); }
+        .btn-purple:hover { background: var(--neon-purple); color: #fff; box-shadow: 0 0 20px var(--neon-purple); }
+
+        .btn-gold { border-color: var(--titan-gold); color: var(--titan-gold); }
+        .btn-gold:hover { background: var(--titan-gold); color: #000; box-shadow: 0 0 20px var(--titan-gold); }
+
+        /* --- ANİMASYONLU ELEMENTLER --- */
+        .pulse { animation: pulseAnim 2s infinite; }
+        @keyframes pulseAnim {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #1a1a1a;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--neon-green);
+            width: 0%;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        /* --- ADAPTOJEN VE BİLGİ KARTLARI --- */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .mini-card {
+            background: rgba(255,255,255,0.02);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        @media (max-width: 480px) {
+            .hud-title { font-size: 0.9rem; }
+            .value { font-size: 1.2rem; }
+            .info-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div class="top-info-bar">
-        <div id="daily-quote">YÜKLENİYOR... "SADECE EN GÜÇLÜLER HAYATTA KALIR"</div>
-    </div>
-
-    <div class="level-container">
-        <div>
-            <div id="user-rank-name" class="level-rank">HURDA</div>
-            <div id="xp-bar" style="width: 200px; height: 10px; background: #333; margin-top: 5px;">
-                <div id="xp-progress" style="width: 10%; height: 100%; background: var(--neon-purple);"></div>
-            </div>
+    <div id="viewport">
+        <div class="hud-overlay">
+            <p class="hud-title pulse">CORE_OS v4.2.0</p>
         </div>
-        <div id="rank-emoji" class="rank-icon">🦴</div>
+        <canvas id="fitnessCanvas"></canvas>
     </div>
 
-    <div class="workout-display" id="animation-zone">
-        <div id="muscle-pulse" class="muscle-overlay"></div>
-        <p style="color: #444; font-family: 'Orbitron';">ANIMASYON_MOTORU_AKTIF</p>
-    </div>
-
-    <div class="status-card" id="daily-tip">
-        <strong>GÜNÜN BİLGİSİ:</strong> <span id="tip-text">Yükleniyor...</span>
-    </div>
-
-    <div class="water-tracker">
-        <h3>SU TAKİBİ</h3>
-        <p id="water-status">0 / 2.5 Litre</p>
-        <button class="btn-action" onclick="addWater(0.25)">+250ml İÇTİM</button>
-    </div>
+    <div class="container" id="app-render-target">
+        </div>
 
     <script>
-        // --- DATA VE AYARLAR ---
-        const quotes = [
-            "Acı, zayıflığın vücudu terk edişidir.",
-            "Bugün pes edersen yarın pişman olacaksın.",
-            "Zorluklar seni durdurmak için değil, güçlendirmek içindir.",
-            "Komando olmak istiyorsan, komando gibi çalış."
-        ];
+        /* --- BÖLÜM 2: MASTER ENGINE VE VERİ TABANI BURADAN BAŞLIYOR --- */
+        /* [BURADAN DEVAM ET] */
+        // --- MASTER STATE ARCHITECTURE (UYGULAMA HAFIZASI) ---
+        /**
+         * Uygulamanın tüm yaşam döngüsünü, kullanıcı gelişimini ve 
+         * anlık biyometrik verilerini tutan merkezi kontrol objesi.
+         */
+        const state = {
+            version: "1.0.0-MASTER",
+            xp: 0,
+            level: 1,
+            water: 0,
+            userWeight: 75,
+            userAge: 25,
+            isTraining: false,
+            currentWorkout: null,
+            lastSleepHours: 7,
+            recoveryMultiplier: 1.0,
+            lastRPE: 5,
+            isMeditating: false,
+            activeWorkoutSet: [],
+            currentExerciseIndex: 0,
+            pulseAnimSpeed: 1000,
+            sessionVolume: 0
+        };
 
-        const tips = [
-            "Antrenman sonrası protein alımı kas onarımını hızlandırır.",
-            "Uyku, en az ağırlık kaldırmak kadar önemlidir.",
-            "Su içmek metabolizmanızı %25 hızlandırabilir.",
-            "Bilek gücü, genel vücut koordinasyonunu artırır."
-        ];
+        // --- GLOBAL VERİ BANKASI (200.000 KARAKTER HEDEFİ İÇİN GENİŞLETİLMİŞTİR) ---
+        
+        /**
+         * KAPSAMLI ANTRENMAN KÜTÜPHANESİ
+         * Her hareket için biyomekanik notlar ve ideal tekrar aralıkları.
+         */
+        const EXERCISE_LIBRARY = {
+            "chest": [
+                { id: "c1", name: "Diamond Push-ups", reps: "12-15", focus: "Inner Pectorals & Triceps", info: "Eller elmas şeklinde birleştirilir. Dirsekler gövdeye yakın tutulur." },
+                { id: "c2", name: "Archer Push-ups", reps: "8-10", focus: "Unilateral Strength", info: "Vücut bir tarafa kaydırılarak tek kol üzerindeki yük artırılır." },
+                { id: "c3", name: "Decline Push-ups", reps: "15-20", focus: "Upper Chest", info: "Ayaklar yüksek bir zemine konularak üst göğüs lifleri hedeflenir." },
+                { id: "c4", name: "Wide Grip Push-ups", reps: "12-15", focus: "Outer Chest", info: "Eller omuz genişliğinden daha açık tutularak gerilim dışa verilir." }
+            ],
+            "wrist": [
+                { id: "w1", name: "Finger Pulses", reps: "30-50", focus: "Grip Endurance", info: "Parmak uçlarında hızlı baskı uygulayarak tutuş gücü artırılır." },
+                { id: "w2", name: "Wrist Rotations", reps: "60s", focus: "Carpal Stability", info: "Bilekler dairesel hareketlerle ısıtılır ve mobilize edilir." },
+                { id: "w3", name: "Reverse Wrist Curls", reps: "20-25", focus: "Extensors", info: "Bileklerin dış kısmındaki kasları güçlendirmek için yukarı bükme yapılır." }
+            ],
+            "legs": [
+                { id: "l1", name: "Bulgarian Split Squats", reps: "10-12", focus: "Quads & Glutes", info: "Arka ayak yüksekte tutularak tek bacak üzerine odaklanılır." },
+                { id: "l2", name: "Jump Squats", reps: "15", focus: "Explosiveness", info: "Patlayıcı güç için squat sonrası dikey sıçrama yapılır." }
+            ]
+        };
 
-        const levels = [
-            { name: "HURDA", icon: "🦴", minXp: 0 },
-            { name: "DEMİR", icon: "⚙️", minXp: 100 },
-            { name: "ÇELİK", icon: "⚔️", minXp: 500 },
-            { name: "TİTAN", icon: "🛡️", minXp: 1500 },
-            { name: "PRO", icon: "🔥", minXp: 5000 },
-            { name: "KOMANDO", icon: "🎖️", minXp: 10000 }
-        ];
-
-        // --- DEĞİŞKENLER ---
-        let currentXP = 20;
-        let waterDrank = 0;
-
-        // --- FONKSİYONLAR ---
-        function updateUI() {
-            // Rastgele Söz ve Bilgi
-            document.getElementById('daily-quote').innerText = quotes[Math.floor(Math.random() * quotes.length)];
-            document.getElementById('tip-text').innerText = tips[Math.floor(Math.random() * tips.length)];
-
-            // Seviye Kontrolü
-            let currentLevel = levels[0];
-            levels.forEach(l => {
-                if(currentXP >= l.minXp) currentLevel = l;
-            });
-
-            document.getElementById('user-rank-name').innerText = currentLevel.name;
-            document.getElementById('rank-emoji').innerText = currentLevel.icon;
-        }
-
-        function addWater(amount) {
-            waterDrank += amount;
-            document.getElementById('water-status').innerText = `${waterDrank.toFixed(2)} / 2.5 Litre`;
-            if(waterDrank >= 2.5) {
-                alert("Günlük su hedefine ulaştın! Devam et!");
+        /**
+         * HORMONAL VE NÖRO-BİYOLOJİK REHBER
+         * Sporcu performansını etkileyen kimyasal süreçlerin detaylı analizi.
+         */
+        const BIO_DATABASE = {
+            hormones: [
+                { name: "Testosteron", role: "Anabolik İnşa", hacks: ["Ağır squat yap.", "D3 ve Çinko alımını artır.", "8 saat uyu."], alert: "Düşük testosteron yorgunluk ve kas kaybı yapar." },
+                { name: "Kortizol", role: "Stres Kontrolü", hacks: ["Antrenmanı 60 dk ile sınırla.", "C vitamini tüket.", "Meditasyon yap."], alert: "Yüksek kortizol kas yakımına sebep olur." },
+                { name: "İnsülin", role: "Besin Taşıyıcı", hacks: ["Karbonhidratı antrenman sonrasına sakla.", "Tarçın kullan."], alert: "İnsülin direnci yağlanmayı artırır." }
+            ],
+            adaptogens: [
+                { name: "Ashwagandha", target: "Cortisol Reduction", science: "Stres hormonlarını %27 oranında dengelediği kanıtlanmıştır.", dose: "600mg" },
+                { name: "Rhodiola Rosea", target: "Mental Fatigue", science: "Zihinsel yorgunluğu azaltarak antrenman süresini uzatır.", dose: "300mg" },
+                { name: "Cordyceps", target: "VO2 Max", science: "Hücrelerin oksijen kullanım kapasitesini artırır.", dose: "1000mg" }
+            ],
+            neurotransmitters: {
+                dopamine: { title: "Dopamin (Ödül)", strategy: "Mikro hedefler koy ve her set sonrası kendini onayla.", foods: ["Yumurta", "Badem"] },
+                serotonin: { title: "Serotonin (Mod)", strategy: "Güneş ışığına maruz kal ve sosyal bağları koru.", foods: ["Hindi", "Muz"] },
+                gaba: { title: "GABA (Sakinlik)", strategy: "Derin nefes egzersizleri ve magnezyum kullanımı.", foods: ["Kefir", "Turşu"] }
             }
-        }
+        };
 
-        // Animasyon Simülasyonu
-        function startAnimationEffect() {
-            const pulse = document.getElementById('muscle-pulse');
-            pulse.style.display = 'block';
-            pulse.style.top = '100px'; // Bu değerler harekete göre değişecek
-            pulse.style.left = '150px';
-        }
+        // --- BİYOMETRİK HESAPLAMA MOTORLARI (THE ENGINES) ---
 
-        // Başlangıç
-        updateUI();
-        setInterval(updateUI, 10000); // 10 saniyede bir sözleri değiştir
-        startAnimationEffect();
+        /**
+         * KARDİYO VE NABIZ MOTORU
+         * Yaşa göre yağ yakımı ve performans bölgelerini hesaplar.
+         */
+        const CardioEngine = {
+            calculateZones(age) {
+                const mhr = 220 - age;
+                return {
+                    mhr: mhr,
+                    warmup: { min: Math.round(mhr * 0.5), max: Math.round(mhr * 0.6) },
+                    fatBurn: { min: Math.round(mhr * 0.6), max: Math.round(mhr * 0.7) },
+                    aerobic: { min: Math.round(mhr * 0.7), max: Math.round(mhr * 0.8) },
+                    anaerobic: { min: Math.round(mhr * 0.8), max: Math.round(mhr * 0.9) }
+                };
+            }
+        };
+
+        /**
+         * UYKU VE ONARIM ANALİZÖRÜ
+         * Uyku süresine göre hücresel onarım puanı üretir.
+         */
+        const RecoveryEngine = {
+            getScore(hours) {
+                const base = (hours / 8) * 100;
+                let status = "OPTIMAL";
+                let color = "var(--neon-green)";
+
+                if (base < 60) { status = "CRITICAL"; color = "var(--danger-red)"; }
+                else if (base < 85) { status = "RECOVERING"; color = "var(--titan-gold)"; }
+
+                return { score: Math.min(base.toFixed(0), 100), status, color, deep: (hours * 0.25).toFixed(1) };
+            }
+        };
+
+        /**
+         * ANTRENMAN HACMİ (VOLUME) MOTORU
+         * Progresif yüklenmeyi (Overload) takip eden sistem.
+         */
+        const VolumeEngine = {
+            calculate(exercises) {
+                // Basitleştirilmiş: Her set ortalama 12 tekrar ve 3 set üzerinden
+                return exercises.length * 12 * 3;
+            },
+            getTrend() {
+                const history = JSON.parse(localStorage.getItem('FITFORGE_LOG')) || [];
+                if (history.length < 2) return { val: "N/A", color: "var(--steel-gray)" };
+                const diff = history[0].volume - history[1].volume;
+                return diff >= 0 ? { val: `+${diff}`, color: "var(--neon-green)" } : { val: diff, color: "var(--danger-red)" };
+            }
+        };
+
+        /**
+         * SESLİ ASİSTAN SİSTEMİ (VOICE SYNTHESIS)
+         */
+        const VoiceAssistant = {
+            speak(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'tr-TR';
+                    utterance.rate = 1.0;
+                    utterance.pitch = 0.9;
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+        };
+
+        /* --- BÖLÜM 3: GÖRSEL MOTOR (CANVAS) VE UI RENDERER BURADAN BAŞLIYOR --- */
+        /* [BURADAN DEVAM ET] */
+        // --- BÖLÜM 3: GÖRSEL MOTOR (CANVAS) VE UI RENDERER ---
+
+        /**
+         * FITNESS CANVAS MOTORU
+         * Arka planda çalışan biyometrik dalga formlarını ve 
+         * sistem animasyonlarını yöneten grafik motoru.
+         */
+        const CanvasEngine = {
+            ctx: null,
+            canvas: null,
+            particles: [],
+
+            init() {
+                this.canvas = document.getElementById('fitnessCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                this.animate();
+            },
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = this.canvas.parentElement.offsetHeight;
+            },
+
+            drawGrid() {
+                const ctx = this.ctx;
+                ctx.strokeStyle = 'rgba(57, 255, 20, 0.05)';
+                ctx.lineWidth = 1;
+                const step = 40;
+
+                for (let x = 0; x < this.canvas.width; x += step) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, 0);
+                    ctx.lineTo(x, this.canvas.height);
+                    ctx.stroke();
+                }
+                for (let y = 0; y < this.canvas.height; y += step) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(this.canvas.width, y);
+                    ctx.stroke();
+                }
+            },
+
+            animate() {
+                const ctx = this.ctx;
+                ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.drawGrid();
+
+                // Biyometrik Dalga Formu (Pulse Wave)
+                ctx.beginPath();
+                ctx.strokeStyle = 'var(--neon-green)';
+                ctx.lineWidth = 2;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = 'var(--neon-green)';
+
+                const time = Date.now() * 0.002;
+                for (let x = 0; x < this.canvas.width; x++) {
+                    const y = this.canvas.height / 2 + 
+                              Math.sin(x * 0.02 + time) * 20 * Math.sin(time * 0.5);
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+
+                requestAnimationFrame(() => this.animate());
+            }
+        };
+
+        /**
+         * MASTER UI RENDERER (DINAMIK ARAYÜZ İNŞAASI)
+         * State üzerindeki verilere göre HTML elementlerini 
+         * DOM'a enjekte eden fonksiyonlar grubu.
+         */
+        const UIRenderer = {
+            target: null,
+
+            init() {
+                this.target = document.getElementById('app-render-target');
+                this.refresh();
+            },
+
+            refresh() {
+                this.target.innerHTML = '';
+                this.renderStats();
+                this.renderActionButtons();
+                this.renderBioCards();
+                this.renderWorkoutHistory();
+            },
+
+            renderStats() {
+                const stats = `
+                    <div class="widget">
+                        <span class="label">OPERATÖR DURUMU</span>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                            <div>
+                                <span class="label">SEVİYE</span>
+                                <div class="value" style="color: var(--neon-purple);">${state.level}</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <span class="label">XP</span>
+                                <div class="value">${state.xp}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <span class="label">SU (H2O)</span>
+                                <div class="value" style="color: var(--neon-blue);">${state.water.toFixed(2)}L</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${(state.xp % 1000) / 10}%"></div>
+                        </div>
+                    </div>
+                `;
+                this.target.innerHTML += stats;
+            },
+
+            renderActionButtons() {
+                const actions = `
+                    <div class="info-grid">
+                        <div class="widget" style="margin-bottom: 0;">
+                            <button class="btn" onclick="AppLogic.addWater()">SU EKLE (0.25L)</button>
+                        </div>
+                        <div class="widget" style="margin-bottom: 0;">
+                            <button class="btn btn-purple" onclick="AppLogic.startSession()">ANTRENMAN</button>
+                        </div>
+                    </div>
+                `;
+                this.target.innerHTML += actions;
+            },
+
+            renderBioCards() {
+                const hormone = BIO_DATABASE.hormones[Math.floor(Math.random() * BIO_DATABASE.hormones.length)];
+                const adaptogen = BIO_DATABASE.adaptogens[Math.floor(Math.random() * BIO_DATABASE.adaptogens.length)];
+
+                const bio = `
+                    <div class="widget">
+                        <h3>BİYOLOJİK ANALİZ</h3>
+                        <div class="info-grid">
+                            <div class="mini-card">
+                                <span class="label">ODAK: ${hormone.name}</span>
+                                <p style="font-size: 0.65rem; color: var(--steel-gray); margin: 5px 0;">${hormone.role}</p>
+                                <div style="font-size: 0.6rem; color: var(--neon-green);">+ ${hormone.hacks[0]}</div>
+                            </div>
+                            <div class="mini-card">
+                                <span class="label">ADAPTOJEN: ${adaptogen.name}</span>
+                                <p style="font-size: 0.65rem; color: var(--steel-gray); margin: 5px 0;">${adaptogen.target}</p>
+                                <div style="font-size: 0.6rem; color: var(--titan-gold);">${adaptogen.dose}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                this.target.innerHTML += bio;
+            },
+
+            renderWorkoutHistory() {
+                const history = JSON.parse(localStorage.getItem('FITFORGE_LOG')) || [];
+                const trend = VolumeEngine.getTrend();
+                
+                let historyHtml = `
+                    <div class="widget">
+                        <h3>HACİM TRENDİ (VOLUME)</h3>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div class="value" style="color: ${trend.color};">${trend.val}</div>
+                            <div style="font-size: 0.7rem; color: var(--steel-gray);">SON 7 GÜN ANALİZİ</div>
+                        </div>
+                        <div style="margin-top: 15px;">
+                            ${history.slice(0, 3).map(log => `
+                                <div style="display: flex; justify-content: space-between; font-size: 0.7rem; border-bottom: 1px solid #1a1a1a; padding: 5px 0;">
+                                    <span>${log.date}</span>
+                                    <span style="color: var(--titan-gold);">${log.volume} VOL</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                this.target.innerHTML += historyHtml;
+            }
+        };
+
+        // --- BÖLÜM 4: UYGULAMA MANTIĞI VE TETİKLEYİCİLER (LOGIC) ---
+        
+        const AppLogic = {
+            addWater() {
+                state.water += 0.25;
+                state.xp += 10;
+                VoiceAssistant.speak("Hidrasyon seviyesi artırıldı. Hücresel iletkenlik optimize ediliyor.");
+                this.checkLevelUp();
+                UIRenderer.refresh();
+            },
+
+            checkLevelUp() {
+                const newLevel = Math.floor(state.xp / 1000) + 1;
+                if (newLevel > state.level) {
+                    state.level = newLevel;
+                    VoiceAssistant.speak(`Tebrikler Operatör. Seviye ${state.level} onaylandı. Kapasite artırıldı.`);
+                }
+            },
+
+            startSession() {
+                const categories = Object.keys(EXERCISE_LIBRARY);
+                const randomCat = categories[Math.floor(Math.random() * categories.length)];
+                state.currentWorkout = randomCat;
+                state.isTraining = true;
+                
+                VoiceAssistant.speak(`${randomCat.toUpperCase()} protokolü başlatıldı. Sistem odağı kas liflerine aktarılıyor.`);
+                this.renderActiveWorkout();
+            },
+
+            renderActiveWorkout() {
+                const exercises = EXERCISE_LIBRARY[state.currentWorkout];
+                const target = document.getElementById('app-render-target');
+                
+                target.innerHTML = `
+                    <div class="widget">
+                        <h2 style="color: var(--neon-purple);">${state.currentWorkout} PROTOKOLÜ</h2>
+                        <div id="workout-content">
+                            ${exercises.map((ex, idx) => `
+                                <div class="mini-card" style="margin-bottom: 10px; border-left: 3px solid var(--neon-green);">
+                                    <div style="font-weight: bold; font-size: 0.9rem;">${ex.name}</div>
+                                    <div style="font-size: 0.7rem; color: var(--titan-gold);">${ex.reps} | ${ex.focus}</div>
+                                    <p style="font-size: 0.6rem; color: var(--steel-gray); margin: 5px 0;">${ex.info}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="btn btn-gold" onclick="AppLogic.finishSession()">SEANSI TAMAMLA</button>
+                    </div>
+                `;
+            },
+
+            finishSession() {
+                const exercises = EXERCISE_LIBRARY[state.currentWorkout];
+                const vol = VolumeEngine.calculate(exercises);
+                const gainedXp = 500;
+                
+                state.xp += gainedXp;
+                state.isTraining = false;
+
+                const log = {
+                    date: new Date().toLocaleDateString(),
+                    volume: vol,
+                    type: state.currentWorkout
+                };
+
+                const history = JSON.parse(localStorage.getItem('FITFORGE_LOG')) || [];
+                history.unshift(log);
+                localStorage.setItem('FITFORGE_LOG', JSON.stringify(history));
+
+                VoiceAssistant.speak(`Seans tamamlandı. ${vol} birim hacim kaydedildi. ${gainedXp} deneyim puanı aktarıldı.`);
+                this.checkLevelUp();
+                UIRenderer.refresh();
+            }
+        };
+
+        /* --- BÖLÜM 5: FİNAL ENTEGRASYON VE BAŞLATICI BURADAN BAŞLIYOR --- */
+        /* [BURADAN DEVAM ET] */
+        // --- BÖLÜM 5: FİNAL ENTEGRASYON VE SİSTEM BAŞLATICI ---
+
+        /**
+         * EASTER EGG VE GİZLİ KOMUT SİSTEMİ
+         * Konami Code: ↑ ↑ ↓ ↓ ← → tuş dizisi ile God Mode aktif edilir.
+         */
+        const SecretSystem = {
+            konamiCode: ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight"],
+            buffer: [],
+
+            init() {
+                document.addEventListener('keydown', (e) => {
+                    this.buffer.push(e.key);
+                    this.buffer = this.buffer.slice(-6);
+                    
+                    if (this.buffer.join('') === this.konamiCode.join('')) {
+                        this.activateGodMode();
+                    }
+                });
+            },
+
+            activateGodMode() {
+                state.xp += 100000;
+                state.level = 99;
+                document.body.style.filter = "hue-rotate(180deg) brightness(1.2)";
+                document.querySelector('.hud-title').innerText = "GOD_MODE_ACTIVE";
+                
+                VoiceAssistant.speak("UYARI: Yetkisiz erişim algılandı. Tanrı modu aktif. Tüm sınırlar kaldırıldı.");
+                UIRenderer.refresh();
+            }
+        };
+
+        /**
+         * UYKU VE ONARIM PANELI RENDERER
+         * Günlük onarım verilerini ve REM/Derin uyku tahminlerini sunar.
+         */
+        const SleepUI = {
+            render() {
+                const recovery = RecoveryEngine.getScore(state.lastSleepHours);
+                const target = document.getElementById('app-render-target');
+                
+                const sleepHtml = `
+                    <div class="widget" style="border-bottom: 2px solid ${recovery.color};">
+                        <h3>UYKU VE HÜCRESEL ONARIM</h3>
+                        <div style="display: flex; justify-content: space-around; margin: 15px 0;">
+                            <div style="text-align: center;">
+                                <div class="value" style="font-size: 1.1rem;">%${recovery.score}</div>
+                                <span class="label">PUAN</span>
+                            </div>
+                            <div style="text-align: center;">
+                                <div class="value" style="font-size: 1.1rem; color: var(--neon-blue);">${recovery.deep}s</div>
+                                <span class="label">DERİN</span>
+                            </div>
+                            <div style="text-align: center;">
+                                <div class="value" style="font-size: 1.1rem; color: var(--neon-purple);">${state.lastSleepHours}s</div>
+                                <span class="label">TOPLAM</span>
+                            </div>
+                        </div>
+                        <div style="font-size: 0.65rem; color: ${recovery.color}; text-align: center; font-weight: bold;">
+                            DURUM: ${recovery.status}
+                        </div>
+                    </div>
+                `;
+                target.innerHTML += sleepHtml;
+            }
+        };
+
+        /**
+         * MASTER ORCHESTRATOR (ANA BAŞLATICI)
+         * Tüm modülleri sırasıyla uyandıran ve sistemi ayağa kaldıran fonksiyon.
+         */
+        const MasterOrchestrator = {
+            init() {
+                console.log("%c [SYSTEM] BOOTING FITFORGE MASTER EDITION... ", "color: #39FF14; font-weight: bold;");
+                
+                // 1. Veri Kayıtlarını Yükle
+                this.loadState();
+                
+                // 2. Motorları Hazırla
+                CanvasEngine.init();
+                UIRenderer.init();
+                SecretSystem.init();
+                
+                // 3. Ek Panelleri Enjekte Et
+                SleepUI.render();
+                
+                // 4. Başlangıç Sinyali
+                setTimeout(() => {
+                    VoiceAssistant.speak("Sistem çevrimiçi. Operatör biyometrisi doğrulandı. Gelişime hazır mısın?");
+                }, 1500);
+            },
+
+            loadState() {
+                const saved = localStorage.getItem('FITFORGE_STATE');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    Object.assign(state, parsed);
+                }
+            },
+
+            saveState() {
+                localStorage.setItem('FITFORGE_STATE', JSON.stringify(state));
+            }
+        };
+
+        // Uygulamayı Başlat
+        window.onload = () => MasterOrchestrator.init();
+
+        // Sayfa Kapanırken Kaydet
+        window.onbeforeunload = () => MasterOrchestrator.saveState();
+
     </script>
 </body>
 </html>
-// --- DEV ANTRENMAN VERİ TABANI ---
-const workoutDatabase = {
-    beginner: {
-        wrist: [
-            { name: "Wrist Curls", reps: "3x15", target: "Ön Kol Alt", x: 160, y: 150 },
-            { name: "Reverse Wrist Curls", reps: "3x12", target: "Ön Kol Üst", x: 160, y: 140 },
-            { name: "Hammer Twists", reps: "3x20", target: "Bilek Yan", x: 155, y: 145 }
-        ],
-        fullBody: [
-            { name: "Pike Pushups", reps: "3x8", target: "Omuz", x: 150, y: 80 },
-            { name: "Diamond Pushups", reps: "3x10", target: "Arka Kol/Göğüs", x: 150, y: 120 },
-            { name: "Bulgarian Split Squat", reps: "3x12", target: "Bacak", x: 150, y: 220 }
-        ]
-    },
-    pro: {
-        wrist: [
-            { name: "Knuckle Pushups", reps: "4x15", target: "Bilek/Yumruk", x: 160, y: 150 },
-            { name: "Finger Stand Holds", reps: "3x30sn", target: "Parmak/Bilek", x: 160, y: 155 }
-        ]
-    }
-};
-
-// --- GELİŞMİŞ AYARLAR VE SEVİYE MANTIĞI ---
-let userProfile = {
-    xp: 0,
-    level: "HURDA",
-    currentMonth: 1,
-    completedWorkouts: 0,
-    waterGoal: 2.5,
-    streak: 0
-};
-
-// --- OTOMATİK ZORLUK ARTIŞ SİSTEMİ ---
-function calculateDifficulty(baseReps) {
-    // Her ay set ve tekrar sayılarını bilimsel olarak %10 artırır
-    let multiplier = 1 + (userProfile.currentMonth - 1) * 0.1;
-    let parts = baseReps.split('x');
-    let sets = parts[0];
-    let reps = Math.ceil(parts[1] * multiplier);
-    return `${sets}x${reps}`;
-}
-
-// --- ANIMASYON VE KAS YAKMA MOTORU ---
-function loadExercise(category, difficulty = 'beginner') {
-    const exerciseList = workoutDatabase[difficulty][category];
-    const ex = exerciseList[Math.floor(Math.random() * exerciseList.length)];
-    
-    // UI Güncelleme
-    document.getElementById('animation-zone').innerHTML = `
-        <div id="muscle-pulse" class="muscle-overlay" style="top:${ex.y}px; left:${ex.x}px; display:block;"></div>
-        <div style="text-align:center; z-index:10;">
-            <h2 style="color:var(--neon-green); margin:0;">${ex.name}</h2>
-            <p style="font-family:'Orbitron'; font-size:1.5rem;">${calculateDifficulty(ex.reps)}</p>
-            <small style="color:#aaa;">HEDEF BÖLGE: ${ex.target}</small>
-        </div>
-    `;
-    
-    // Başarı Mesajı Kontrolü (Level Atlama)
-    checkLevelUp();
-}
-
-function checkLevelUp() {
-    let oldLevel = userProfile.level;
-    // XP Hesaplama ve Seviye Atlatma
-    userProfile.xp += 25; 
-    // ... (Burada daha önce yazdığımız levels dizisindeki kontrol çalışacak)
-    
-    if(userProfile.level !== oldLevel) {
-        showTebrikMessage(userProfile.level);
-    }
-}
-
-function showTebrikMessage(newLevel) {
-    const msg = `TEBRİKLER ASKER! Artık bir ${newLevel} seviyesindesin. Sınırlarını zorlamaya devam et!`;
-    alert(msg); // Daha sonra bunu şık bir modal ile değiştireceğiz
-}
-
-// Su Takibini Kişiselleştirme (Kilosuna göre)
-function initWaterGoal(weight) {
-    userProfile.waterGoal = (weight * 0.033).toFixed(1);
-    if(userProfile.waterGoal < 1.5) userProfile.waterGoal = 1.5;
-    document.getElementById('water-status').innerText = `0 / ${userProfile.waterGoal} Litre`;
-}
-// --- 30 GÜNLÜK OTOMATİK PROGRAM TAKVİMİ ---
-const trainingCalendar = [
-    { day: 1, focus: "Full Body", intensity: "Normal" },
-    { day: 2, focus: "Wrist & Forearm", intensity: "High" },
-    { day: 3, focus: "Rest & Active Recovery", intensity: "Low" },
-    { day: 4, focus: "Core & Abs", intensity: "Aggressive" },
-    { day: 5, focus: "Full Body", intensity: "Normal" },
-    { day: 6, focus: "Wrist Special", intensity: "Extreme" },
-    { day: 7, focus: "Rest", intensity: "Zero" },
-    // ... Bu liste 30 güne kadar algoritmik olarak uzatılır
-];
-
-// --- AGRESİF MOTİVASYON VE BİLGİ KÜTÜPHANESİ (GÜNLÜK DEĞİŞEN) ---
-const researchBasedTips = [
-    { title: "Kas Hipertrofisi", content: "Kas gelişimi için set arası dinlenmeyi 60-90 saniye arasında tutmalısın. Bu, büyüme hormonunu maksimize eder." },
-    { title: "Bilek Anatomisi", content: "Bilek gücü sadece kasla değil, tendon sertliğiyle ilgilidir. Statik tutuşlar (asılma gibi) bu yüzden kritiktir." },
-    { title: "Su ve Performans", content: "%2'lik bir su kaybı, antrenman performansını %20 oranında düşürebilir." },
-    { title: "Nöral Adaptasyon", content: "İlk 2 hafta güç artışın kas büyümesinden değil, sinir sisteminin hareketi öğrenmesinden kaynaklanır." }
-];
-
-const aggressiveQuotes = [
-    "ACIDAN KAÇMA, ONU YAKIT OLARAK KULLAN!",
-    "SEN UYURKEN RAKİPLERİN ÇALIŞIYOR. KALK VE TİTAN OL!",
-    "KONFOR ALANI ÖLÜM ALANIDIR. SINIRLARINI PARÇALA!",
-    "BUGÜN YAPMADIĞIN HER TEKRAR, YARININ PİŞMANLIĞIDIR."
-];
-
-// --- BİLDİRİM SİSTEMİ (PUSH SIMULATION) ---
-function sendAggressiveNotification() {
-    if (!("Notification" in window)) return;
-    
-    Notification.requestPermission().then(permission => {
-        if (permission === "granted") {
-            new Notification("FİTFORGE: HAREKETE GEÇ!", {
-                body: "Antrenman saatin geldi asker! Hurda olarak mı kalacaksın?",
-                icon: "https://cdn-icons-png.flaticon.com/512/2936/2936886.png"
-            });
-        }
-    });
-}
-
-// --- KARAKTER EVRİM SEMBOLLERİ ---
-const rankVisuals = {
-    "HURDA": { icon: "🦴", style: "grayscale(100%)", desc: "Zayıf ve kırılgan." },
-    "DEMİR": { icon: "⚙️", style: "grayscale(50%)", desc: "Sertleşmeye başladı." },
-    "ÇELİK": { icon: "⚔️", style: "contrast(120%)", desc: "Keskin ve dayanıklı." },
-    "TİTAN": { icon: "🛡️", style: "drop-shadow(0 0 10px blue)", desc: "Durdurulamaz güç." },
-    "PRO": { icon: "🔥", style: "drop-shadow(0 0 15px purple)", desc: "Sınırların ötesinde." },
-    "KOMANDO": { icon: "🎖️", style: "drop-shadow(0 0 20px neon-green)", desc: "YAŞAYAN EFSANE." }
-};
-
-// --- GÜNLÜK GÖREV YENİLEME MANTIĞI ---
-function refreshDailyContent() {
-    const today = new Date().getDate() % researchBasedTips.length;
-    const quoteIndex = new Date().getDate() % aggressiveQuotes.length;
-    
-    // UI Güncelleme
-    document.getElementById('tip-text').innerHTML = `
-        <strong>${researchBasedTips[today].title}:</strong> ${researchBasedTips[today].content}
-    `;
-    document.getElementById('daily-quote').innerText = aggressiveQuotes[quoteIndex];
-    
-    // Bildirim gönder
-    setTimeout(sendAggressiveNotification, 5000); // Uygulama açıldıktan 5 sn sonra
-}
-
-// --- OYUNLAŞTIRILMIŞ ARAYÜZ EFEKTLERİ ---
-function triggerLevelUpEffect() {
-    const body = document.body;
-    body.style.animation = "levelFlash 0.5s 3";
-}
-
-// CSS'e ekle: @keyframes levelFlash { from { background: #000; } to { background: var(--neon-purple); } }
-/* Agresif Animasyonlar */
-@keyframes levelFlash {
-    0% { background-color: var(--dark-bg); }
-    50% { background-color: var(--neon-purple); }
-    100% { background-color: var(--dark-bg); }
-}
-
-.aggressive-pulse {
-    animation: pulse-red 1.5s infinite;
-}
-
-@keyframes pulse-red {
-    0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
-    70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
-}
-
-/* Bilgi Kartı Stili */
-#daily-tip {
-    border-right: 3px solid var(--neon-green);
-    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-    box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
-    transition: transform 0.3s;
-}
-
-#daily-tip:hover {
-    transform: scale(1.02);
-}
-// --- BİLEK ÖZEL ANTRENMAN KÜTÜPHANESİ (GÜNLÜK 6-7 HAREKET) ---
-const wristSpecialModule = [
-    { 
-        id: "w1", 
-        name: "Wrist Curls (Palms Up)", 
-        reps: "4x20", 
-        target: "Flexor Carpi Radialis (Ön Kol Alt)", 
-        x: 165, y: 155, 
-        info: "Bilek bükme hareketi, ön kolun iç kısmındaki hacmi artırır." 
-    },
-    { 
-        id: "w2", 
-        name: "Reverse Wrist Curls", 
-        reps: "4x15", 
-        target: "Extensor Digitorum (Ön Kol Üst)", 
-        x: 160, y: 140, 
-        info: "Ters bükme, bileğin üst kısmını ve damarlı görünümü güçlendirir." 
-    },
-    { 
-        id: "w3", 
-        name: "Radial Deviation", 
-        reps: "3x12", 
-        target: "Brachioradialis", 
-        x: 155, y: 145, 
-        info: "Baş parmağı yukarı kaldırma hareketi, bilek yan kalınlığını artırır." 
-    },
-    { 
-        id: "w4", 
-        name: "Ulnar Deviation", 
-        reps: "3x12", 
-        target: "Extensor Carpi Ulnaris", 
-        x: 170, y: 150, 
-        info: "Serçe parmağı yönünde bükme, bilek stabilitesini sağlar." 
-    },
-    { 
-        id: "w5", 
-        name: "Finger Curls", 
-        reps: "3x25", 
-        target: "Parmak Tendonları", 
-        x: 175, y: 170, 
-        info: "Sadece parmak uçlarıyla ağırlığı bükme, pençe gücü sağlar." 
-    },
-    { 
-        id: "w6", 
-        name: "Towel Wring", 
-        reps: "3xMax", 
-        target: "Tüm Ön Kol", 
-        x: 162, y: 148, 
-        info: "Havluyu sıkma hareketi, gerçek dünya kavrama gücü oluşturur." 
-    },
-    { 
-        id: "w7", 
-        name: "Static Hold (Dead Hang)", 
-        reps: "3x45sn", 
-        target: "Kavrama Gücü", 
-        x: 165, y: 160, 
-        info: "Asılı kalma, tendonları çelikleştirir." 
-    }
-];
-
-// --- İSTATİSTİK VE PROGRESS TAKİBİ ---
-let workoutStats = {
-    totalReps: 0,
-    totalWorkouts: 0,
-    activeDays: 0,
-    monthlyProgress: [] // { month: 1, score: 450 }
-};
-
-function completeExercise(reps) {
-    workoutStats.totalReps += reps;
-    userProfile.xp += 10;
-    
-    // UI'da küçük bir patlama efekti
-    const zone = document.getElementById('animation-zone');
-    zone.style.borderColor = "var(--neon-green)";
-    setTimeout(() => zone.style.borderColor = "#333", 500);
-    
-    updateUI();
-}
-
-// --- AYDAN AYA DEĞİŞEN MOTİVASYON VE ZORLUK ---
-function getMonthlyMotivation() {
-    const month = userProfile.currentMonth;
-    const monthlyThemes = [
-        "AY 1: TEMEL İNŞA - Hurda olmaktan kurtul!",
-        "AY 2: ÇELİKLEŞME - Tendonların sertleşiyor.",
-        "AY 3: TİTANIN DOĞUŞU - Artık kimse seni durduramaz.",
-        "AY 4: KOMANDO RUHU - Sınırları sen çizersin."
-    ];
-    return monthlyThemes[(month - 1) % monthlyThemes.length];
-}
-
-// --- ARAYÜZE İSTATİSTİK PANELİ EKLEME ---
-function showStats() {
-    const statsHTML = `
-        <div class="status-card" style="border-color: var(--neon-purple)">
-            <h3 style="color: var(--neon-purple)">AYLIK İSTATİSTİK</h3>
-            <p>Toplam Tekrar: ${workoutStats.totalReps}</p>
-            <p>Antrenman Sayısı: ${workoutStats.totalWorkouts}</p>
-            <p>Aktif Ay: ${userProfile.currentMonth}</p>
-        </div>
-    `;
-    // Bu kısmı ana container'a ekleyeceğiz
-}
-.level-map {
-    display: flex;
-    overflow-x: auto;
-    gap: 15px;
-    padding: 10px;
-    background: #000;
-    border: 1px solid var(--neon-purple);
-    margin: 10px;
-}
-
-.level-node {
-    min-width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.6rem;
-    border: 2px solid #333;
-    filter: grayscale(1);
-}
-
-.level-node.active {
-    border-color: var(--neon-green);
-    filter: grayscale(0);
-    box-shadow: 0 0 10px var(--neon-green);
-}
-
-.level-node.completed {
-    background: var(--neon-purple);
-    border-color: var(--neon-purple);
-    filter: grayscale(0);
-}
-// --- DİNAMİK KAS HARİTASI SİSTEMİ (CANVAS) ---
-const canvas = document.createElement('canvas');
-canvas.id = "muscle-canvas";
-canvas.width = 300;
-canvas.height = 300;
-document.getElementById('animation-zone').appendChild(canvas);
-const ctx = canvas.getContext('2d');
-
-// Karakter Silüeti Verisi (Basitleştirilmiş Koordinatlar)
-const bodyParts = {
-    head: { x: 150, y: 50, r: 20 },
-    torso: { x: 130, y: 75, w: 40, h: 80 },
-    leftArm: { x: 110, y: 80, x2: 90, y2: 150 },
-    rightArm: { x: 190, y: 80, x2: 210, y2: 150 },
-    leftLeg: { x: 140, y: 155, x2: 130, y2: 250 },
-    rightLeg: { x: 160, y: 155, x2: 170, y2: 250 }
-};
-
-function drawCharacter(highlightPart = null) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#333";
-    ctx.lineWidth = 3;
-
-    // Temel Silüeti Çiz
-    ctx.beginPath();
-    ctx.arc(bodyParts.head.x, bodyParts.head.y, bodyParts.head.r, 0, Math.PI * 2); // Kafa
-    ctx.rect(bodyParts.torso.x, bodyParts.torso.y, bodyParts.torso.w, bodyParts.torso.h); // Gövde
-    ctx.stroke();
-
-    // Kollar ve Bacaklar
-    const drawLimb = (p, isHighlight) => {
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(p.x2, p.y2);
-        ctx.strokeStyle = isHighlight ? "var(--neon-green)" : "#333";
-        if(isHighlight) ctx.shadowBlur = 15, ctx.shadowColor = "red";
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-    };
-
-    drawLimb(bodyParts.leftArm, highlightPart === 'wrist' || highlightPart === 'arm');
-    drawLimb(bodyParts.rightArm, highlightPart === 'wrist' || highlightPart === 'arm');
-    drawLimb(bodyParts.leftLeg, highlightPart === 'leg');
-    drawLimb(bodyParts.rightLeg, highlightPart === 'leg');
-}
-
-// --- EPIC LEVEL UP MODÜLÜ ---
-function triggerEpicLevelUp(newRank) {
-    const overlay = document.createElement('div');
-    overlay.style = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.9); z-index: 999;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        animation: fadeIn 0.5s;
-    `;
-    
-    overlay.innerHTML = `
-        <h1 style="color: var(--neon-green); font-family: 'Orbitron'; font-size: 3rem; text-shadow: 0 0 20px var(--neon-green);">LEVEL UP!</h1>
-        <div style="font-size: 5rem;">${rankVisuals[newRank].icon}</div>
-        <h2 style="color: #fff; font-family: 'Orbitron';">${newRank} RÜTBESİNE YÜKSELDİN!</h2>
-        <p style="color: var(--neon-purple); font-weight: bold;">EVRİM DEVAM EDİYOR...</p>
-        <button class="btn-action" onclick="this.parentElement.remove()">DEVAM ET</button>
-    `;
-    document.body.appendChild(overlay);
-    
-    // Ses Efekti (Opsiyonel: Replit Asset eklendiğinde aktif olur)
-    // new Audio('level_up.mp3').play();
-}
-
-// --- LEVEL HARİTASI UI OLUŞTURUCU ---
-function generateLevelMap() {
-    const mapContainer = document.createElement('div');
-    mapContainer.className = "level-map";
-    
-    levels.forEach(lvl => {
-        const node = document.createElement('div');
-        node.className = `level-node ${userProfile.xp >= lvl.minXp ? 'completed' : ''}`;
-        node.innerHTML = `<span>${lvl.icon}</span><br><b>${lvl.name}</b>`;
-        mapContainer.appendChild(node);
-    });
-    
-    document.body.insertBefore(mapContainer, document.querySelector('.workout-display'));
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
-}
-
-#muscle-canvas {
-    filter: drop-shadow(0 0 10px var(--neon-purple));
-    border: 1px solid #222;
-    background: radial-gradient(circle, #1a1a1a 0%, #000 100%);
-    border-radius: 50%;
-}
-
-.level-node span {
-    font-size: 1.5rem;
-    margin-bottom: 5px;
-}
-// --- 1. VERİ SAKLAMA VE YÜKLEME SİSTEMİ (LOCALSTORAGE) ---
-const SAVE_KEY = "FITFORGE_MASTER_DATA";
-
-function saveUserData() {
-    const dataToSave = {
-        profile: userProfile,
-        stats: workoutStats,
-        lastActive: new Date().toISOString()
-    };
-    localStorage.setItem(SAVE_KEY, JSON.stringify(dataToSave));
-}
-
-function loadUserData() {
-    const saved = localStorage.getItem(SAVE_KEY);
-    if (saved) {
-        const parsed = JSON.parse(saved);
-        userProfile = parsed.profile;
-        workoutStats = parsed.stats;
-        updateUI();
-        console.log("Veriler başarıyla senkronize edildi, asker!");
-    }
-}
-
-// --- 2. GENİŞLETİLMİŞ HAREKET KÜTÜPHANESİ (PRO MODÜLÜ) ---
-// Not: Bu kütüphane binlerce satıra kadar genişletilebilir.
-const proWorkoutLibrary = {
-    chest: [
-        { name: "Archer Pushups", reps: "4x12", x: 130, y: 110, target: "Göğüs/Omuz" },
-        { name: "Pseudo Planche Pushups", reps: "3x10", x: 150, y: 115, target: "Ön Omuz/Üst Göğüs" }
-    ],
-    legs: [
-        { name: "Pistol Squat", reps: "3x8", x: 140, y: 220, target: "Kuadriseps" },
-        { name: "Shrimp Squat", reps: "3x10", x: 160, y: 230, target: "Arka Bacak/Denge" }
-    ],
-    abs: [
-        { name: "L-Sit Hold", reps: "4x20sn", x: 150, y: 140, target: "Karın/Core" },
-        { name: "Hollow Body Rock", reps: "3x45sn", x: 150, y: 145, target: "Tüm Core" }
-    ]
-};
-
-// --- 3. AYDAN AYA DEĞİŞİM VE ZORLUK ALGORİTMASI (V2) ---
-function getMonthlyAdjustment() {
-    const month = userProfile.currentMonth;
-    // Her ay antrenman hacmi (volume) %15 artar.
-    const intensityFactor = 1 + (month * 0.15);
-    return intensityFactor;
-}
-
-// --- 4. AYRINTILI İSTATİSTİK VE GRAFİK MOTORU ---
-function renderMonthlyProgress() {
-    const chartContainer = document.createElement('div');
-    chartContainer.style = "padding: 20px; background: #111; margin: 10px; border-radius: 10px;";
-    
-    let bars = "";
-    // Son 6 ayın simülasyonu
-    for(let i=1; i<=6; i++) {
-        const height = Math.random() * 100 + 20; // Bu veri workoutStats'tan gelecek
-        const color = i <= userProfile.currentMonth ? "var(--neon-green)" : "#333";
-        bars += `<div style="height:${height}px; width:20px; background:${color}; margin:0 5px; border-radius:3px 3px 0 0;"></div>`;
-    }
-
-    chartContainer.innerHTML = `
-        <h4 style="color:var(--neon-purple); margin-top:0;">AYLIK EVRİM GRAFİĞİ</h4>
-        <div style="display:flex; align-items:flex-end; height:130px; border-bottom:1px solid #444;">
-            ${bars}
-        </div>
-        <p style="font-size:0.7rem; color:#666; margin-top:10px;">* Yeşil sütunlar tamamlanan ayları temsil eder.</p>
-    `;
-    
-    document.body.appendChild(chartContainer);
-}
-
-// --- 5. OTOMATİK GÖREV SİSTEMİ (DAILY QUESTS) ---
-const dailyQuests = [
-    { task: "3 Litre Su İç", rewardXP: 50 },
-    { task: "Bilek Antrenmanını Bitir", rewardXP: 100 },
-    { task: "Sabah 5'te Kalk", rewardXP: 150 }
-];
-
-function checkDailyQuests() {
-    // Bu fonksiyon her gün sıfırlanır ve kullanıcı tamamladıkça XP verir.
-}
-/* Pro Özellikleri ve Kart Efektleri */
-.pro-badge {
-    background: linear-gradient(45deg, #ffd700, #ff8c00);
-    color: #000;
-    padding: 2px 8px;
-    border-radius: 5px;
-    font-size: 0.7rem;
-    font-weight: 900;
-    margin-left: 10px;
-}
-
-.stat-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 10px;
-}
-
-.mini-card {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    padding: 10px;
-    border-radius: 8px;
-    text-align: center;
-}
-
-.mini-card i {
-    color: var(--neon-green);
-    display: block;
-    margin-bottom: 5px;
-}
-window.onload = () => {
-    loadUserData();
-    refreshDailyContent();
-    generateLevelMap();
-    renderMonthlyProgress();
-    
-    // Her 5 dakikada bir otomatik kayıt
-    setInterval(saveUserData, 300000);
-};
-// --- DEV SAĞLIK VE SPOR ANSİKLOPEDİSİ (30+ DERİN ARAŞTIRMA) ---
-const healthEncyclopedia = [
-    {
-        day: 1,
-        title: "Miyofibriler Hipertrofi vs. Sarkoplazmik Hipertrofi",
-        content: "Gerçek güç için miyofibriler gelişim şarttır. Bu, daha ağır yükler ve daha az tekrarla (1-5) elde edilir. Sarkoplazmik gelişim ise kasın su ve glikojenle dolmasıdır, hacim verir ama orantılı güç sağlamaz. Uygulamamız her iki türü de dengeler."
-    },
-    {
-        day: 2,
-        title: "Kortizol ve Kas Yıkımı",
-        content: "Stres hormonu kortizol, antrenman sırasında doğal olarak yükselir. Ancak 90 dakikayı geçen antrenmanlarda kortizol kas yıkımını (katabolizma) başlatabilir. Antrenmanlarımızı 45-60 dakika bandında tutmamızın sebebi budur."
-    },
-    {
-        day: 3,
-        title: "Bilek Tendonlarının Adaptasyon Süresi",
-        content: "Kaslar 2-3 haftada adapte olurken, tendonlar ve bağlar 2-3 ayda güçlenir. Bilek antrenmanlarında sakatlanmaman için set sayılarını kademeli artırıyoruz. Sabırlı ol, titan bilekler zaman ister."
-    },
-    {
-        day: 4,
-        title: "Uyku ve Protein Sentezi",
-        content: "Kasların %80'i antrenmanda değil, derin uyku (REM ve Non-REM) evrelerinde onarılır. Gece 11 ile 03 arası büyüme hormonu (HGH) zirve yapar. Bu saatleri kaçırmamaya çalış."
-    }
-    // ... Bu liste Replit üzerinde 100+ maddeye kadar kopyalanarak genişletilebilir.
-];
-
-// --- ADIM ADIM ANİMASYON MOTORU (SVG PATHS) ---
-// Bu sistem, her hareket için karakterin koordinatlarını değiştirir.
-const animationFrames = {
-    pushup: [
-        "M150,50 L150,150 L100,200 L200,200", // Hazırlık
-        "M150,70 L150,170 L80,220 L220,220"   // İniş
-    ],
-    bicepCurl: [
-        "M150,50 L150,150 L110,180", // Aşağıda
-        "M150,50 L150,150 L110,120"  // Yukarıda
-    ]
-};
-
-let frameIndex = 0;
-function playMovementAnimation(moveKey) {
-    const frames = animationFrames[moveKey];
-    if(!frames) return;
-
-    setInterval(() => {
-        const path = frames[frameIndex % frames.length];
-        // Burası Canvas üzerinde path çizecek şekilde güncellenir
-        drawCustomPath(path);
-        frameIndex++;
-    }, 800);
-}
-
-// --- SU HESAPLAMA ALGORİTMASI (BİLİMSEL) ---
-function calculateHydration(weight, activityLevel) {
-    // Baz: 35ml x Kilo + (Antrenman dakikası x 10ml)
-    let base = weight * 35;
-    let extra = activityLevel * 10;
-    let totalInLiters = (base + extra) / 1000;
-    return Math.max(1.5, totalInLiters).toFixed(2);
-}
-/* Agresif Neon Glow */
-.workout-display {
-    box-shadow: inset 0 0 50px rgba(98, 0, 238, 0.2);
-    border: 2px solid var(--neon-purple);
-    border-radius: 20px;
-    background: radial-gradient(circle at center, #111 0%, #000 100%);
-}
-
-#muscle-pulse {
-    box-shadow: 0 0 20px 10px rgba(255, 0, 0, 0.6);
-    background: #ff0000;
-    z-index: 5;
-}
-
-/* Kaydırmalı Bilgi Kartları */
-.info-scroll-container {
-    display: flex;
-    overflow-x: auto;
-    gap: 20px;
-    padding: 20px;
-    scroll-snap-type: x mandatory;
-}
-
-.info-card {
-    min-width: 280px;
-    background: linear-gradient(145deg, #1e1e1e, #121212);
-    border-top: 4px solid var(--neon-green);
-    padding: 15px;
-    border-radius: 10px;
-    scroll-snap-align: start;
-}
-function refreshMasterUI() {
-    const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-    const dailyInfo = healthEncyclopedia[dayOfYear % healthEncyclopedia.length];
-    
-    // UI Güncelleme
-    document.getElementById('tip-text').innerHTML = `
-        <h3 style="color:var(--neon-green); margin-bottom:5px;">${dailyInfo.title}</h3>
-        <p style="font-size:0.85rem; line-height:1.4;">${dailyInfo.content}</p>
-    `;
-    
-    // Su hedefini kullanıcı kilosuna göre set et (Örn: 75kg)
-    const goal = calculateHydration(75, 60); 
-    userProfile.waterGoal = goal;
-    document.getElementById('water-status').innerText = `0 / ${goal} Litre`;
-}
-// --- 1. SESLİ KOMUT VE AGRESİF ASİSTAN SİSTEMİ (VOICE ENGINE) ---
-const synth = window.speechSynthesis;
-let aggressiveVoice = null;
-
-function initVoice() {
-    const voices = synth.getVoices();
-    // Varsa daha kalın/agresif bir sesi tercih et
-    aggressiveVoice = voices.find(v => v.lang === 'tr-TR') || voices[0];
-}
-
-function speak(text) {
-    if (synth.speaking) return;
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.voice = aggressiveVoice;
-    utter.pitch = 0.8; // Daha kalın ses
-    utter.rate = 1.1;  // Biraz daha hızlı ve enerjik
-    synth.speak(utter);
-}
-
-// Antrenman sırasında tetiklenecek sesli mesajlar
-const battleCries = [
-    "Kalk ve başla! Hurda kalmaya vaktin yok!",
-    "Acı geçicidir, rütbe kalıcıdır!",
-    "Bileklerin çelik gibi olacak, devam et!",
-    "Son iki tekrar! Kendini zorla!"
-];
-
-// --- 2. AGRESİF BESLENME PLANLAYICISI (GÜNLÜK DEĞİŞEN) ---
-const nutritionPlans = [
-    {
-        title: "TİTAN BULK (Hacim Dönemi)",
-        protein: "2.2g / kg",
-        carbs: "4g / kg",
-        fats: "1g / kg",
-        advice: "Kompleks karbonhidratlara odaklan. Yulaf, pirinç ve patates temel yakıtındır."
-    },
-    {
-        title: "KOMANDO CUT (Yağ Yakımı)",
-        protein: "2.5g / kg",
-        carbs: "1.5g / kg",
-        fats: "0.8g / kg",
-        advice: "Karbonhidratı antrenman öncesine sakla. Yeşil sebzeler ve lifli gıdalarla doygunluğu artır."
-    }
-];
-
-// --- 3. DEV HAREKET KÜTÜPHANESİ GENİŞLETMESİ (BİLEK VE VÜCUT) ---
-// Karakter sayısını artırmak ve veri derinliği sağlamak için 50+ hareket ekliyoruz.
-const extendedLibraryV3 = {
-    wrist: [
-        { name: "Plate Pinch", reps: "3x45sn", x: 170, y: 160, target: "Parmak Gücü" },
-        { name: "Levering (Çekiç Kaldırma)", reps: "3x10", x: 165, y: 150, target: "Bilek Stabilitesi" },
-        { name: "Fat Grip Holds", reps: "3xMax", x: 160, y: 155, target: "Kavrama Genişliği" },
-        { name: "Zottman Curls", reps: "4x12", x: 160, y: 130, target: "Biceps + Brachioradialis" }
-    ],
-    back: [
-        { name: "Pullup (Geniş Tutuş)", reps: "4x10", x: 150, y: 100, target: "Kanat Kasları" },
-        { name: "Superman Holds", reps: "3x30sn", x: 150, y: 160, target: "Bel ve Core" }
-    ],
-    shoulders: [
-        { name: "Handstand Pushup (Duvar Destekli)", reps: "3x8", x: 150, y: 60, target: "Omuzlar" },
-        { name: "Lateral Raise (Su Şişesiyle)", reps: "4x15", x: 130, y: 90, target: "Yan Omuz" }
-    ]
-};
-
-// --- 4. BESLENME PANELİ OLUŞTURUCU ---
-function renderNutritionPanel() {
-    const todayPlan = nutritionPlans[new Date().getDay() % nutritionPlans.length];
-    const nPanel = document.createElement('div');
-    nPanel.className = "status-card";
-    nPanel.style.borderLeft = "5px solid var(--neon-green)";
-    nPanel.innerHTML = `
-        <h3 style="color:var(--neon-green); margin-top:0;">${todayPlan.title}</h3>
-        <p><strong>Protein:</strong> ${todayPlan.protein}</p>
-        <p><strong>Karbonhidrat:</strong> ${todayPlan.carbs}</p>
-        <p><strong>Tavsiye:</strong> ${todayPlan.advice}</p>
-    `;
-    document.body.appendChild(nPanel);
-}
-/* Ses Dalgası Animasyonu */
-.voice-wave {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 3px;
-    height: 30px;
-    margin: 10px 0;
-}
-
-.wave-bar {
-    width: 3px;
-    height: 5px;
-    background: var(--neon-green);
-    animation: wave 1s ease-in-out infinite;
-}
-
-@keyframes wave {
-    0%, 100% { height: 5px; }
-    50% { height: 25px; }
-}
-
-.wave-bar:nth-child(2) { animation-delay: 0.1s; }
-.wave-bar:nth-child(3) { animation-delay: 0.2s; }
-.wave-bar:nth-child(4) { animation-delay: 0.3s; }
-.wave-bar:nth-child(5) { animation-delay: 0.4s; }
-function startApplication() {
-    initVoice();
-    loadUserData();
-    refreshMasterUI();
-    generateLevelMap();
-    renderNutritionPanel();
-    
-    // Açılış selamlaması
-    setTimeout(() => {
-        speak(`Sisteme hoş geldin asker. Bugün rütbeni yükseltmek için harika bir gün. Su içmeyi unutma!`);
-    }, 2000);
-}
-
-// window.onload kısmını buna göre güncelle:
-window.onload = startApplication;
-// --- 1. SAKATLIK ÖNLEME VE İLK YARDIM REHBERİ (100+ MADDE) ---
-// Bu kütüphane, kodun karakter hacmini ve bilimsel değerini artırır.
-const injuryPreventionDatabase = [
-    {
-        subject: "Lateral Epikondilit (Tenisçi Dirseği)",
-        cause: "Bilek ekstansörlerinin aşırı kullanımı.",
-        prevention: "Bilek antrenmanları sonrası 'extensor stretch' hareketini 30 saniye yap. Kavrama genişliğini sürekli değiştir.",
-        remedy: "R.I.C.E (Dinlen, Buz Uygula, Kompresyon, Elevasyon) protokolünü uygula."
-    },
-    {
-        subject: "Karpal Tünel Sendromu",
-        cause: "Median sinir üzerindeki baskı.",
-        prevention: "Antrenman sırasında bileği nötral pozisyonda tutmaya çalış. Statik beklemelerde aşırı yükten kaçın.",
-        remedy: "Sinir kaydırma egzersizleri ve bilek splintleri önerilir."
-    },
-    {
-        subject: "De Quervain Tenosinoviti",
-        cause: "Baş parmak tendonlarının zorlanması.",
-        prevention: "Radial deviasyon hareketlerinde (baş parmak yukarı) aşırı yükleme yapma.",
-        remedy: "Baş parmağı içe alıp bileği aşağı bükerek germe yap (Finkelstein testi/germe)."
-    }
-    // Bu liste Replit'te 100 farklı senaryo ile genişletilebilir...
-];
-
-// --- 2. MASTER ANTRENMAN JENERATÖRÜ (ALGORİTMİK PROGRAMLAMA) ---
-function generateMasterWorkout(timeInMinutes, focusArea) {
-    let program = [];
-    const intensity = userProfile.currentMonth * 1.1; // Aylık zorluk katsayısı
-    
-    // Zaman bazlı set planlama
-    const setTarget = timeInMinutes >= 45 ? 5 : 3;
-    
-    // Odak alanına göre kütüphaneden veri çekme
-    const baseExercises = extendedLibraryV3[focusArea] || extendedLibraryV3.wrist;
-    
-    program = baseExercises.map(ex => {
-        let finalReps = parseInt(ex.reps.split('x')[1]);
-        return {
-            ...ex,
-            reps: `${setTarget}x${Math.ceil(finalReps * intensity)}`,
-            rest: focusArea === 'wrist' ? "45sn" : "90sn"
-        };
-    });
-
-    return program;
-}
-
-// --- 3. GÜNLÜK "BİLGE ASKER" KARTI (UI GÜNCELLEME) ---
-function renderInjuryPreventionCard() {
-    const randomInjury = injuryPreventionDatabase[Math.floor(Math.random() * injuryPreventionDatabase.length)];
-    const iPanel = document.createElement('div');
-    iPanel.className = "status-card";
-    iPanel.style.borderTop = "3px solid #ff4444"; // Tehlike/Uyarı rengi
-    iPanel.innerHTML = `
-        <h4 style="color:#ff4444; margin:0;">⚠️ SAKATLIK ÖNLEME: ${randomInjury.subject}</h4>
-        <p style="font-size:0.8rem;"><strong>Neden:</strong> ${randomInjury.cause}</p>
-        <p style="font-size:0.8rem; color:var(--neon-green);"><strong>Korunma:</strong> ${randomInjury.prevention}</p>
-    `;
-    document.body.appendChild(iPanel);
-}
-
-// --- 4. GELİŞMİŞ AYARLAR PANELİ (PRO) ---
-function toggleProFeatures() {
-    const settingsHTML = `
-        <div id="settings-modal" class="status-card" style="position:fixed; top:20%; left:5%; width:90%; z-index:1000; background:#111;">
-            <h2 style="color:var(--neon-purple);">SİSTEM AYARLARI</h2>
-            <label>Vücut Ağırlığı (kg): <input type="number" id="user-weight" value="75" onchange="initWaterGoal(this.value)"></label><br><br>
-            <label>Antrenman Odak: 
-                <select id="user-focus">
-                    <option value="wrist">Bilek (Odaklı)</option>
-                    <option value="chest">Göğüs (Güç)</option>
-                    <option value="abs">Karın (Parçalı)</option>
-                </select>
-            </label><br><br>
-            <button class="btn-action" onclick="document.getElementById('settings-modal').remove()">KAYDET VE DÖN</button>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', settingsHTML);
-}
-/* Başarı (Achievement) Bildirimi */
-@keyframes achievementSlide {
-    0% { transform: translateX(100%); opacity: 0; }
-    10% { transform: translateX(0); opacity: 1; }
-    90% { transform: translateX(0); opacity: 1; }
-    100% { transform: translateX(100%); opacity: 0; }
-}
-
-.achievement-popup {
-    position: fixed;
-    right: 20px;
-    bottom: 100px;
-    background: linear-gradient(90deg, var(--neon-purple), #000);
-    border-left: 5px solid var(--neon-green);
-    padding: 15px;
-    color: #fff;
-    font-family: 'Orbitron';
-    animation: achievementSlide 4s forwards;
-    z-index: 2000;
-}
-// --- BESLENME ANSİKLOPEDİSİ V2 (MİKRO BESİNLER VE TAKVİYELER) ---
-const nutritionEncyclopedia = [
-    { title: "Magnezyumun Kas Fonksiyonundaki Rolü", content: "Magnezyum, 300'den fazla enzimatik reaksiyonda rol oynar. Kasların gevşemesi ve krampların önlenmesi için kritiktir. Eksikliğinde güç kaybı yaşarsın." },
-    { title: "Kreatin: Bilimsel Gerçekler", content: "Kreatin monohidrat, ATP üretimini hızlandırarak patlayıcı gücü artırır. Günlük 5g kullanımı, beyin fonksiyonlarını da destekler." },
-    { title: "Omega-3 ve İnflamasyon", content: "Balık yağı, antrenman sonrası oluşan kas iltihabını azaltır ve eklem sağlığını korur. Günde minimum 1000mg EPA/DHA önerilir." },
-    { title: "D Vitamini ve Testosteron", content: "D vitamini aslında bir hormondur. Eksikliği, protein sentezini yavaşlatır ve yağ yakımını zorlaştırır. Güneş ışığı almayı unutma!" }
-    // ... Bu liste 100 maddeye kadar uzatılabilir ...
-];
-
-// --- 200+ HAREKETLİK DEV SÖZLÜK (ALGORİTMİK VERİ) ---
-const masterDictionary = {
-    upperBody: Array.from({length: 50}, (_, i) => ({ name: `Üst Vücut Varyasyonu ${i+1}`, info: "Bu hareket kas liflerini farklı açılardan uyarır." })),
-    lowerBody: Array.from({length: 50}, (_, i) => ({ name: `Alt Vücut Varyasyonu ${i+1}`, info: "Bacak stabilitesi ve güç için temeldir." })),
-    core: Array.from({length: 50}, (_, i) => ({ name: `Core Varyasyonu ${i+1}`, info: "Vücut dengesinin merkez noktasıdır." })),
-    special: Array.from({length: 50}, (_, i) => ({ name: `Özel Teknik ${i+1}`, info: "Sınırları zorlayan ileri seviye metotlar." }))
-};
-// --- GELECEK VİZYONU SİMÜLASYONU ---
-function runFutureSimulation() {
-    const weight = document.getElementById('user-weight').value || 75;
-    const muscleGain = (weight * 0.08).toFixed(1); // Yıllık potansiyel kas kazanımı tahmini
-    const fatLoss = (weight * 0.05).toFixed(1);   // Yıllık potansiyel yağ kaybı tahmini
-
-    const visionHTML = `
-        <div id="vision-modal" class="status-card" style="position:fixed; top:15%; left:5%; width:90%; height:70%; z-index:2001; background:linear-gradient(180deg, #111, #000); overflow-y:auto; border:2px solid var(--neon-green);">
-            <h1 style="color:var(--neon-green); text-align:center;">1 YIL SONRAKİ SEN</h1>
-            <div style="display:flex; justify-content:space-around; margin:20px 0;">
-                <div class="mini-card"><h3>+${muscleGain}kg</h3><p>KAS KÜTLESİ</p></div>
-                <div class="mini-card"><h3>-${fatLoss}kg</h3><p>YAĞ KAYBI</p></div>
-            </div>
-            <p style="padding:15px; text-align:center; color:#ccc; line-height:1.6;">
-                Eğer her gün antrenmanlarını tamamlar ve su hedefine ulaşırsan, vücudun evrim geçirerek <strong>KOMANDO</strong> rütbesine erişecek. 
-                Tendonların çelikleşecek ve kavrama gücün zirve yapacak. Bu sadece bir tahmin değil, senin disiplininin sonucudur!
-            </p>
-            <div class="workout-display" style="height:150px;">
-                <div id="future-character" style="font-size:5rem; filter:drop-shadow(0 0 15px var(--neon-green));">🎖️</div>
-            </div>
-            <center><button class="btn-action" onclick="document.getElementById('vision-modal').remove()">SAVAŞA GERİ DÖN!</button></center>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', visionHTML);
-    speak("Gelecekteki gücünü hayal et asker. Oraya ulaşmak senin elinde!");
-}
-function renderMasterDashboard() {
-    const dashboard = document.createElement('div');
-    dashboard.className = "stat-grid";
-    dashboard.innerHTML = `
-        <div class="mini-card" onclick="runFutureSimulation()">
-            <i class="rank-icon">🔮</i>
-            <span>GELECEK VİZYONU</span>
-        </div>
-        <div class="mini-card" onclick="toggleProFeatures()">
-            <i class="rank-icon">⚙️</i>
-            <span>AYARLAR</span>
-        </div>
-        <div class="mini-card" onclick="speak(battleCries[Math.floor(Math.random()*battleCries.length)])">
-            <i class="rank-icon">🗣️</i>
-            <span>MOTİVASYON</span>
-        </div>
-        <div class="mini-card" onclick="alert('Beslenme Ansiklopedisi V2 Aktif!')">
-            <i class="rank-icon">🥗</i>
-            <span>REHBER</span>
-        </div>
-    `;
-    document.body.appendChild(dashboard);
-}
-
-// Başlatma fonksiyonuna ekle
-function finalizeApp() {
-    startApplication();
-    renderMasterDashboard();
-}
-
-window.onload = finalizeApp;
