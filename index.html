@@ -1,177 +1,33 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FitFlow Pro | Master Edition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --p-color: #007AFF;
-            --p-accent: #34C759;
-            --bg-main: #F2F2F7;
-            --surface: #FFFFFF;
-            --text-main: #1C1C1E;
-            --text-sec: #8E8E93;
-            --warning: #FF9500;
-            --error: #FF3B30;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --nav-height: 75px;
-            --shadow: 0 8px 24px rgba(0,0,0,0.05);
-        }
+// --- 1. HAFIZA (DEĞİŞKENLER) ---
+let toplamPuan = 0; // Uygulama açıldığında puan sıfır.
+let kullaniciAdi = "Aslan"; // Senin adın.
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg-main); color: var(--text-main); line-height: 1.5; overflow-x: hidden; min-height: 100vh; }
+// --- 2. HAREKET (FONKSİYON) ---
+// Bu fonksiyon, yaptığın her hareket için sana puan kazandıracak.
+function egzersizYap(hareketAdi, kazanilanPuan) {
+    
+    // Puanı mevcut puana ekle
+    toplamPuan = toplamPuan + kazanilanPuan;
+    
+    console.log("---------------------------");
+    console.log("Hareket: " + hareketAdi);
+    console.log("Kazanılan: " + kazanilanPuan + " puan.");
+    console.log("Güncel Toplam Puanın: " + toplamPuan);
 
-        .pro-card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: var(--shadow); transition: var(--transition); border: 1px solid rgba(0,0,0,0.02); }
-        .section-title { font-size: 0.75rem; font-weight: 800; color: var(--text-sec); letter-spacing: 1px; text-transform: uppercase; margin: 25px 0 15px 5px; }
-        .badge { padding: 4px 10px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; background: var(--bg-main); color: var(--p-color); }
-        
-        main { padding: 20px 20px 100px 20px; max-width: 500px; margin: 0 auto; }
-        
-        nav { position: fixed; bottom: 0; width: 100%; height: var(--nav-height); background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid rgba(0,0,0,0.05); z-index: 9000; }
-        .nav-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-sec); transition: var(--transition); }
-        .nav-link.active { color: var(--p-color); }
-        .nav-link span { font-size: 0.65rem; font-weight: 700; margin-top: 4px; }
+    // --- 3. KARAR (IF-ELSE) ---
+    // Eğer puanın 100'ü geçerse seviye atlatalım
+    if (toplamPuan >= 100) {
+        console.log("TEBRİKLER " + kullaniciAdi + "! Günlük hedefini tamamladın. 🔥");
+    } else {
+        let kalan = 100 - toplamPuan;
+        console.log("Hedefe ulaşmak için " + kalan + " puan daha lazım. Vazgeçme! 💪");
+    }
+}
 
-        .fade-in { animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .progress-bar { width: 100%; height: 8px; background: #eee; border-radius: 4px; overflow: hidden; }
-    </style>
-</head>
-<body>
+// --- 4. ÇALIŞTIRMA (UYGULAMAYI KULLANMA) ---
+// Şimdi hayali olarak antrenman yapmaya başlayalım:
 
-    <main id="main-view"></main>
+egzersizYap("Şınav", 30);   // İlk hareket
+egzersizYap("Mekik", 40);   // İkinci hareket
+egzersizYap("Squat", 50);   // Üçüncü hareket (Burada hedef dolacak!)
 
-    <nav>
-        <a href="#" class="nav-link active" onclick="ViewController.switchTab('home')"><i>🏠</i><span>ANA SAYFA</span></a>
-        <a href="#" class="nav-link" onclick="ViewController.switchTab('report')"><i>📊</i><span>RAPOR</span></a>
-        <a href="#" class="nav-link" onclick="ViewController.switchTab('profile')"><i>👤</i><span>PROFİL</span></a>
-    </nav>
-
-    <script>
-        /* --- SİSTEM DURUMU (STATE) --- */
-        const ProState = {
-            user: {
-                name: "Sporcu",
-                level: 1,
-                xp: 0,
-                dailyGoal: 30,
-                completedToday: 0,
-                completedWater: 0,
-                weightHistory: []
-            },
-            settings: { theme: "classic", soundEnabled: true, version: "1.0.0-PRO" },
-            activeWorkout: { id: null, exercises: [], currentIndex: 0, isPaused: false },
-            workoutHistory: []
-        };
-
-        /* --- EGZERSİZ VERİTABANI --- */
-        const MASTER_EXERCISE_DB = {
-            exercises: [
-                { id: "e1", name: "Şınav", category: "Göğüs", met: 4.0 },
-                { id: "e2", name: "Squat", category: "Bacak", met: 5.0 },
-                { id: "e3", name: "Mekik", category: "Karın", met: 3.5 }
-            ],
-            plans: [
-                { id: "p1", title: "Başlangıç Seti", desc: "Tüm vücut ısınma ve güç.", duration: "10 Dakika", intensity: "Kolay", exercises: ["e1", "e2", "e3"] }
-            ]
-        };
-
-        /* --- ANA MOTORLAR --- */
-        const StorageManager = {
-            save() { localStorage.setItem('FITFLOW_PRO_DATA', JSON.stringify(ProState)); },
-            load() {
-                const data = localStorage.getItem('FITFLOW_PRO_DATA');
-                if (data) Object.assign(ProState, JSON.parse(data));
-            }
-        };
-
-        const VoiceEngine = {
-            speak(text) {
-                if (!ProState.settings.soundEnabled) return;
-                const msg = new SpeechSynthesisUtterance(text);
-                msg.lang = 'tr-TR';
-                window.speechSynthesis.speak(msg);
-            }
-        };
-
-        const ViewController = {
-            switchTab(tab) {
-                document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-                // Basit bir sekme yönetimi
-                if (tab === 'home') UIRenderer.renderDashboard();
-                else if (tab === 'profile') UIRenderer.renderProfile();
-                else document.getElementById('main-view').innerHTML = `<h2 class="fade-in">${tab.toUpperCase()} Yakında...</h2>`;
-            }
-        };
-
-        /* --- UI RENDERER --- */
-        const UIRenderer = {
-            renderDashboard() {
-                const main = document.getElementById('main-view');
-                main.innerHTML = `
-                    <div class="fade-in">
-                        <h1 style="font-weight:900; font-size:1.8rem;">SELAM, ${ProState.user.name.toUpperCase()}!</h1>
-                        <p style="color:var(--text-sec);">Bugün harika bir gün.</p>
-                        
-                        <div id="ai-coach-box" class="pro-card" style="margin-top:20px; background: linear-gradient(135deg, #007AFF, #5856D6); color:white;">
-                            <h3 style="font-size:0.9rem;">AI KOÇ ÖNERİSİ</h3>
-                            <p id="ai-text" style="font-weight:600; margin-top:10px;">Veriler analiz ediliyor...</p>
-                        </div>
-
-                        <div class="section-title">ANTRENMANLAR</div>
-                        <div id="workout-list">
-                            ${MASTER_EXERCISE_DB.plans.map(plan => `
-                                <div class="pro-card" onclick="alert('Antrenman Modülü Başlatılıyor...')">
-                                    <div style="display:flex; justify-content:space-between;">
-                                        <h3 style="font-weight:800;">${plan.title}</h3>
-                                        <span class="badge">${plan.intensity}</span>
-                                    </div>
-                                    <p style="font-size:0.75rem; color:var(--text-sec); margin-top:5px;">${plan.desc}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-                this.updateAICoach();
-            },
-
-            renderProfile() {
-                const main = document.getElementById('main-view');
-                main.innerHTML = `
-                    <div class="fade-in">
-                        <div class="pro-card" style="text-align:center;">
-                            <div style="width:80px; height:80px; background:var(--p-color); border-radius:50%; margin: 0 auto; display:flex; align-items:center; justify-content:center; color:white; font-size:2rem; font-weight:900;">${ProState.user.name[0]}</div>
-                            <h2 style="margin-top:15px;">${ProState.user.name}</h2>
-                            <p style="color:var(--text-sec);">Seviye ${ProState.user.level} Sporcu</p>
-                        </div>
-                        <button onclick="StorageManager.save(); alert('Kaydedildi!');" class="pro-card" style="width:100%; border:none; background:var(--p-accent); color:white; font-weight:800;">VERİLERİ SENKRONİZE ET</button>
-                    </div>
-                `;
-            },
-
-            updateAICoach() {
-                const aiText = document.getElementById('ai-text');
-                if (aiText) aiText.innerText = "Bugün su tüketimine dikkat etmelisin. 10 dakikalık başlangıç seti ile enerjini topla!";
-            }
-        };
-
-        /* --- SİSTEMİ BAŞLAT --- */
-        window.onload = () => {
-            StorageManager.load();
-            
-            // Eğer isim varsayılan ise Onboarding göster
-            if (ProState.user.name === "Sporcu") {
-                const name = prompt("Lütfen adınızı girin:", "Sporcu");
-                if (name) ProState.user.name = name;
-                StorageManager.save();
-            }
-
-            UIRenderer.renderDashboard();
-            VoiceEngine.speak("Sistem hazır. Hoş geldin " + ProState.user.name);
-        };
-    </script>
-</body>
-</html>
